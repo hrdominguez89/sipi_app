@@ -1,0 +1,7 @@
+<div class="container">
+    <mat-grid-list cols="2" rowHeight="350px">
+        <mat-grid-tile [colspan]="1" [rowspan]="1" [style.background]="''" *ngFor="let card of cardData">
+            <app-card routerLink="/table" [title]="card.title" [content]="card.description" [image]="card.img"></app-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>

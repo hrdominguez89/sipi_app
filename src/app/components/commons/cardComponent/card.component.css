@@ -1,0 +1,17 @@
+.container-card {
+  width: 400px;
+  height: 180px;
+  cursor: pointer;
+
+}
+
+.container-card img {
+  width: 40%;
+}
+
+.container-card-group { 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0px 12px;
+}

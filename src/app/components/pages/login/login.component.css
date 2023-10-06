@@ -1,0 +1,47 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.container-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+.container-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
+.container-body-inputs {
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    display: flex;
+}
+
+.container-body-form {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    max-width: 500px;
+    width: 60%;
+}
+
+.container-button {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.container-body-img img {
+    width: 40vw;
+    display: block;
+}
