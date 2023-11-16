@@ -1,13 +1,14 @@
-<nav class="navbar">
+<nav class="navbar" *ngIf="getIsLoggedIn()">
     <div class="navbar-brand">
-        <div class="navbar-item">
-            <button  mat-raised-button color="accent" routerLink="/home">Volver</button>
+        <div class="navbar-item" *ngIf="isTableRoute()">
+            <button mat-raised-button color="accent" (click)="volverAtras()">Volver</button>
         </div>
     </div>
     <div class="navbar-menu">
         <div class="navbar-end">
             <div class="navbar-item">
-                <button  mat-raised-button color="accent" routerLink="/login">Cerrar Sesión</button>
+                <button (click)="desloguear()" mat-raised-button color="accent" routerLink="/login">Cerrar
+                    Sesión</button>
             </div>
 
         </div>
