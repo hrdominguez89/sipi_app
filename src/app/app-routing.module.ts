@@ -10,8 +10,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'dashboard-admin', component: DashboardAdminComponent },
   { path: 'dashboard-prof', component: DashboardProfComponent },
-  { path: 'dashboard-bedel', component: DashboardProfComponent },
-  { path: 'dashboard-default', component: DashboardProfComponent },
+  { path: 'dashboard-bedel', component: DashboardProfComponent }, // modificar component
+  { path: 'dashboard-default', component: DashboardProfComponent }, // modificar component
   { path: 'table/:tableName', component: TableComponent },
 ];
 

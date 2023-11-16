@@ -19,10 +19,10 @@ export class TableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Obtén el nombre de la tabla de los parámetros de la ruta
+    // Obtiene el nombre de la tabla de los parámetros de la ruta
     const tableName = this.route.snapshot.paramMap.get('tableName');
 
-    // Suscríbete al servicio de comunicación para recibir actualizaciones
+    // Se suscribe al servicio de comunicación para recibir actualizaciones
     this.dataSharingService.getDataAndHeaders()
       .pipe(take(1)) // Se suscribe solo una vez
       .subscribe(data => {
