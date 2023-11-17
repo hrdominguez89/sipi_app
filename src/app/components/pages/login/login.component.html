@@ -1,32 +1,55 @@
 <div class="container">
-    <div class="container-banner">
-        <div class="container-banner-texto">
-            <h1><strong>SIPI</strong></h1>
-            <h2><strong>Sistema Integral de Préstamos e Instalación de Programas</strong></h2>
-        </div>
-        <div class="container-banner-logo">
-            <img src="../../../../assets/images/logo_ifts_11.png" alt="logo ifts11">
-        </div>
+  <div class="container-banner">
+    <div class="container-banner-texto">
+      <h1><strong>SIPI</strong></h1>
+      <h2><strong>Sistema Integral de Préstamos e Instalación de Programas</strong></h2>
     </div>
-    <div class="container-body">
-        <div class="container-body-inputs">
-            <h2><strong>Bienvenido</strong></h2>
-            <p><strong>Para comenzar inice sesión</strong></p>
-            <form class="container-body-form" (ngSubmit)="onSubmit()">
-                <mat-form-field class="field">
-                    <input type="email" matInput placeholder="Usuario" id="username" [(ngModel)]="username" name="username" required>
-                </mat-form-field>
-                <mat-form-field class="field">
-                    <input type="password" matInput placeholder="Contraseña" id="password" [(ngModel)]="password" name="password" required>
-                </mat-form-field>
-                <div class="container-button">
-                    <button mat-raised-button color="primary" type="submit">Iniciar Sesión</button>
-                </div>
-            </form>
-        </div>
-        <div class="container-body-img">
-            <img src="../../../../assets/images/img_login.png" alt="bienvenida login">
-        </div>
+    <div class="container-banner-logo">
+      <img src="../../../../assets/images/logo_ifts_11.png" alt="logo ifts11">
     </div>
+  </div>
+  <div class="container-body">
+    <div class="container-body-inputs">
+      <h2><strong>Bienvenido</strong></h2>
+      <p><strong>Para comenzar inice sesión</strong></p>
+      <form [formGroup]="contactForm" class="container-body-form" (ngSubmit)="onSubmit()">
+
+        <mat-form-field class="field">
+          <input formControlName="formularioNombreUsuario" name="formularioNombreUsuario"
+            [class.is-invalid]="contactForm.get('formularioNombreUsuario')?.invalid && contactForm.get('formularioNombreUsuario')?.touched"
+            id="formularioNombreUsuario" type="text" matInput placeholder="Usuario" id="username" [(ngModel)]="username"
+            name="username" required>
+          <div
+            *ngIf="contactForm.get('formularioNombreUsuario')?.touched && contactForm.get('formularioNombreUsuario')?.errors?.['required'] "
+            class="alert alert-danger formulario-error text-center mt-3">*El campo de nombre es obligatorio</div>
+          <div
+            *ngIf="contactForm.get('formularioNombreUsuario')?.touched && contactForm.get('formularioNombreUsuario')?.errors?.['minlength'] "
+            class="alert alert-danger formulario-error mt-3">*El campo de nombre debe contener al menos
+            {{contactForm.get('formularioNombreUsuario')?.errors?.['minlength'].requiredLength}} letras</div>
+        </mat-form-field>
+
+        <mat-form-field class="field">
+          <input formControlName="formularioPasswordUsuario" name="formularioPasswordUsuario"
+            [class.is-invalid]="contactForm.get('formularioPasswordUsuario')?.invalid && contactForm.get('formularioPasswordUsuario')?.touched"
+            type="password" id="formularioPasswordUsuario" matInput placeholder="Contraseña" id="password"
+            [(ngModel)]="password" name="password" required>
+          <div
+            *ngIf="contactForm.get('formularioPasswordUsuario')?.touched && contactForm.get('formularioPasswordUsuario')?.errors?.['required'] "
+            class="alert alert-danger formulario-error text-center mt-3">*El campo de contraseña es obligatorio</div>
+          <div
+            *ngIf="contactForm.get('formularioPasswordUsuario')?.touched && contactForm.get('formularioPasswordUsuario')?.errors?.['minlength'] "
+            class="alert alert-danger formulario-error mt-3">*El campo de contraseña debe contener al menos
+            {{contactForm.get('formularioPasswordUsuario')?.errors?.['minlength'].requiredLength}} letras</div>
+        </mat-form-field>
+
+        <div class="container-button">
+          <button mat-raised-button color="primary" type="submit">Iniciar Sesión</button>
+        </div>
+      </form>
+    </div>
+    <div class="container-body-img">
+      <img src="../../../../assets/images/img_login.png" alt="bienvenida login">
+    </div>
+  </div>
 
 </div>
