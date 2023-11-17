@@ -12,15 +12,15 @@
         <div class="container-body-inputs">
             <h2><strong>Bienvenido</strong></h2>
             <p><strong>Para comenzar inice sesión</strong></p>
-            <form class="container-body-form">
+            <form class="container-body-form" (ngSubmit)="onSubmit()">
                 <mat-form-field class="field">
-                    <input type="email" matInput placeholder="Usuario">
+                    <input type="email" matInput placeholder="Usuario" id="username" [(ngModel)]="username" name="username" required>
                 </mat-form-field>
                 <mat-form-field class="field">
-                    <input type="password" matInput placeholder="Contraseña">
+                    <input type="password" matInput placeholder="Contraseña" id="password" [(ngModel)]="password" name="password" required>
                 </mat-form-field>
                 <div class="container-button">
-                    <button mat-raised-button color="primary" routerLink="/home">Iniciar Sesión</button>
+                    <button mat-raised-button color="primary" type="submit">Iniciar Sesión</button>
                 </div>
             </form>
         </div>
