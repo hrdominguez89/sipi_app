@@ -43,19 +43,19 @@ export class DashboardAdminComponent {
     switch (cardId) {
       case '1':
         dataObservable = this.usersService.obtenerUsers();
-        tableName = 'users';
+        tableName = 'Usuarios';
         break;
       case '2':
         dataObservable = this.computersService.obtenerComputadoras();
-        tableName = 'computers';
+        tableName = 'Computadoras';
         break;
       case '3':
         dataObservable = this.studentsService.obtenerStudents();
-        tableName = 'students';
+        tableName = 'Estudiantes';
         break;
       case '4':
         dataObservable = this.programsService.obtenerPrograms();
-        tableName = 'programs';
+        tableName = 'Programas';
         break;
       default:
         // Manejar un caso no esperado si es necesario

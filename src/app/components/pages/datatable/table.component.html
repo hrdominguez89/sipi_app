@@ -1,5 +1,13 @@
 <!-- dynamic-table.component.html -->
-<div class="container-title">{{ 'titulo tabla' }}</div>
+<div class="container-banner">
+    <div class="container-title">
+        <strong>Lista de {{ tableName }}</strong>
+    </div>
+    <div class="container-button">
+        <button mat-raised-button color="accent" (click)="openDialogTemplate(template)"> Agregar {{tableName}}</button>
+    </div>
+</div>
+
 <div class="container-table">
     <table datatable class="table" *ngIf="tableData && tableData.length > 0">
         <thead>
@@ -14,3 +22,21 @@
         </tbody>
     </table>
 </div>
+<ng-template #template>
+    <h1 mat-dialog-title>Completar datos: </h1>
+    <div mat-dialog-content>
+        <form [formGroup]="formGroup">
+            <div *ngFor="let header of columnHeaders">
+                <mat-form-field *ngIf="header !== 'id' && header !== 'created_at' && header !== 'rol_id' && header !== 'active'">
+                    <label>{{header}}</label>
+                    <input matInput placeholder="complete su {{header}}" [formControl]="formGroupConfig[header]">
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-button mat-dialog-close (click)="onSave()">GUARDAR</button>
+
+        <button mat-button mat-dialog-close>CERRAR</button>
+    </div>
+</ng-template>

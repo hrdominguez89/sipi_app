@@ -1,8 +1,15 @@
-.container-title {
-    padding: 20px 10px;
-    background-color: grey;
+.container-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+}
+.container-button button {  
+    padding: 10px;
+    border-radius: 4px;
 }
 
 .container-table {
     padding: 20px 10px;
+    min-height: 100vh;
 }
