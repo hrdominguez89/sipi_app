@@ -16,6 +16,11 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './auth.interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DialogTemplateComponent } from './components/commons/dialog-template/dialog-template.component';
+import { ReactiveFormComponent } from './components/reactive-form/reactive-form.component';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -27,6 +32,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     TableComponent,
     CardComponent,
     FooterComponent,
+    DialogTemplateComponent,
+    ReactiveFormComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +43,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     DataTablesModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
+    MatIconModule
   ],
   providers: [
     {

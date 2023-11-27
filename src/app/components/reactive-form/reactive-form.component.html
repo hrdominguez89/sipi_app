@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>{{operacion}} {{table}} </h1>
+<div mat-dialog-content>
+    <p>Todos los campos son requeridos (*)</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div *ngFor="let field of formConfig">
+            <mat-form-field>
+                <input matInput [type]="field.type" [formControlName]="field.name" placeholder="{{ field.label }} *"
+                    required="#reactiveForm" />
+                <div *ngIf="form.get(field.name)?.hasError('invalidEmail') && form.get(field.name)?.touched"
+                    class="error-message">
+                    Ingresa un {{ field.label }} válido.
+                </div>
+
+                <div *ngIf="form.get(field.name)?.hasError('minlength')  && form.get(field.name)?.touched"
+                    class="error-message">
+                    La {{ field.label }} debe tener al menos 4 caracteres.
+                </div>
+            </mat-form-field>
+
+        </div>
+        <div mat-dialog-actions>
+            <button mat-button mat-dialog-close (click)="onSave()" [disabled]="form.invalid">GUARDAR</button>
+
+            <button mat-button mat-dialog-close>CERRAR</button>
+        </div>
+    </form>
+</div>
