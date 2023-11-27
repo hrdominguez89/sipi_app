@@ -18,6 +18,9 @@ import { AuthInterceptor } from './auth.interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DialogTemplateComponent } from './components/commons/dialog-template/dialog-template.component';
+import { ReactiveFormComponent } from './components/reactive-form/reactive-form.component';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -29,7 +32,8 @@ import { DialogTemplateComponent } from './components/commons/dialog-template/di
     TableComponent,
     CardComponent,
     FooterComponent,
-    DialogTemplateComponent
+    DialogTemplateComponent,
+    ReactiveFormComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,8 @@ import { DialogTemplateComponent } from './components/commons/dialog-template/di
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule
   ],
   providers: [
     {

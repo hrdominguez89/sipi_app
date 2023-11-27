@@ -6,3 +6,9 @@
     background-color: #4473C3;
     height: 70px;
 }
+
+.navbar-logo,
+h1 {
+    color: #fff;
+    margin: 0px;
+}

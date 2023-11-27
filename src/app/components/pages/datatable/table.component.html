@@ -1,10 +1,20 @@
 <!-- dynamic-table.component.html -->
 <div class="container-banner">
-    <div class="container-title">
-        <strong>Lista de {{ tableName }}</strong>
+    <div class="container-text">
+        <h1>{{tableName}}</h1>
+        <img src="../../../../assets/images/logo_ifts_11.png" alt="logo ifts11">
     </div>
-    <div class="container-button">
-        <button mat-raised-button color="accent" (click)="openDialogTemplate(template)"> Agregar {{tableName}}</button>
+    <div class="container-banner-actions">
+        <div class="container-title">
+            <strong>
+                <h2>Lista de {{ tableName }}</h2>
+            </strong>
+        </div>
+        <div class="container-button">
+            <button mat-raised-button color="accent" (click)="openDialogTemplate(template)">
+                Agregar {{tableName}}
+            </button>
+        </div>
     </div>
 </div>
 
@@ -13,30 +23,31 @@
         <thead>
             <tr>
                 <th *ngFor="let header of columnHeaders">{{ header }}</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let item of tableData">
                 <td *ngFor="let header of columnHeaders">{{ item[header] }}</td>
+                <td>
+                    <button mat-icon-button (click)="openDialogTemplate(template, item)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="borrarItem(item)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
 </div>
 <ng-template #template>
-    <h1 mat-dialog-title>Completar datos: </h1>
-    <div mat-dialog-content>
-        <form [formGroup]="formGroup">
-            <div *ngFor="let header of columnHeaders">
-                <mat-form-field *ngIf="header !== 'id' && header !== 'created_at' && header !== 'rol_id' && header !== 'active'">
-                    <label>{{header}}</label>
-                    <input matInput placeholder="complete su {{header}}" [formControl]="formGroupConfig[header]">
-                </mat-form-field>
-            </div>
-        </form>
-    </div>
-    <div mat-dialog-actions>
-        <button mat-button mat-dialog-close (click)="onSave()">GUARDAR</button>
-
-        <button mat-button mat-dialog-close>CERRAR</button>
-    </div>
+    <app-reactive-form 
+        #reactiveForm 
+        [formConfig]="formConfig" 
+        [data]="data" 
+        (save)="onSave($event)"
+        [operacion]="operacionCapitalizada" 
+        [table]="tableName">
+    </app-reactive-form>
 </ng-template>

@@ -4,28 +4,40 @@ import { ActivatedRoute } from '@angular/router';
 import { DataSharingService } from '../../../services/data-sharing.service';
 import { take } from 'rxjs';
 import { DialogService } from '../../../services/dialog.service';
-import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DialogTemplateComponent } from '../../commons/dialog-template/dialog-template.component';
 import { UsersService } from '../../../services/users.service';
 import { ProgramsService } from '../../../services/programs.service';
 import { ComputersService } from '../../../services/computers.service';
 import { StudentsService } from '../../../services/students.service';
+import { ReactiveFormComponent } from '../../reactive-form/reactive-form.component';
+import { ViewChild } from '@angular/core';
+
+export enum Operacion {
+  Crear = 'crear',
+  Editar = 'editar',
+  Eliminar = 'eliminar',
+}
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
 })
+
 export class TableComponent implements OnInit {
   tableData: any[] = [];
   columnHeaders: string[] = [];
   @Input() tableName: string | null = null;
-
-  formGroup: FormGroup = new FormGroup({});
-  formGroupConfig: { [key: string]: FormControl } = {};
+  data: any = null;
+  id: number = 0;
+  formConfig: any[] = [];
 
   private matDialogRef!: MatDialogRef<DialogTemplateComponent>
+  operacionActual: Operacion = Operacion.Crear;
+  operacionCapitalizada: string = '';
+
+  @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,8 +46,9 @@ export class TableComponent implements OnInit {
     private usersService: UsersService,
     private programsService: ProgramsService,
     private computersService: ComputersService,
-    private studentsService: StudentsService
+    private studentsService: StudentsService,
   ) { }
+
 
   ngOnInit(): void {
     // Obtiene el nombre de la tabla de los parámetros de la ruta
@@ -48,10 +61,19 @@ export class TableComponent implements OnInit {
         this.tableData = data.data;
         this.columnHeaders = data.headers;
       });
+
+    this.formConfig = this.getFormConfig();
+
+
   }
 
-  openDialogTemplate(template: TemplateRef<any>) {
-    this.formGroup = this.createDynamicForm();
+  openDialogTemplate(template: TemplateRef<any>, data: any = null) {
+    this.data = data;
+    this.id = data?.id;
+
+    this.operacionActual = data ? Operacion.Editar : Operacion.Crear;
+    this.operacionCapitalizada = this.operacionActual.charAt(0).toUpperCase() + this.operacionActual.slice(1);
+
     this.matDialogRef = this.dialogService.openDialogTemplate({
       template,
     })
@@ -59,86 +81,154 @@ export class TableComponent implements OnInit {
       .afterClosed()
       .subscribe(res => {
         console.log('dialog close', res)
-        this.formGroup.reset()
+        this.reactiveFormComponent.resetForm();
+        this.operacionActual = Operacion.Crear;
       })
+
+    if (this.operacionActual === Operacion.Editar) {
+      this.reactiveFormComponent?.fillForm();
+    }
   }
 
-  onSave() {
-    console.log(this.formGroup.value)
-    this.enviarDatosAlServicio(this.formGroup.value);
-    this.formGroup.reset()
-    this.matDialogRef.close()
+  onSave(formValue: any) {
+    this.enviarDatosAlServicio(this.operacionActual, formValue);
+    this.matDialogRef.close();
   }
 
-  private createDynamicForm(): FormGroup {
-    this.formGroupConfig = {};
-    // Agrega un control por cada columna en la tabla
-    this.columnHeaders.forEach((header) => {
-      if (header !== 'id'  && header !== 'created_at' && header !== 'rol_id' && header !== 'active') {
-        this.formGroupConfig[header] = new FormControl();
-      }
-    });
-
-    return new FormGroup(this.formGroupConfig);
-  }
-
-  private enviarDatosAlServicio(datos: any) {
-    // Llama a tu servicio aquí, pasando el nombre de la tabla y los datos
-    console.log('Enviando datos al servicio para la tabla', this.tableName, datos);
-
-    // Selecciona el servicio según el nombre de la tabla
+  private enviarDatosAlServicio(operacion: string, datos: any) {
+    // enviar datos al servicio según la operación y la tabla
     switch (this.tableName) {
       case 'Usuarios':
-        this.usersService.agregarUser(datos).subscribe(
-          (response) => {
-            console.log('Datos enviados exitosamente:', response);
-            // Puedes manejar la respuesta como desees
-          },
-          (error) => {
-            console.error('Error al enviar datos:', error);
-            // Puedes manejar el error como desees
-          }
-        );
-        break;
-      case 'Computadoras':
-        this.computersService.agregarComputadora(datos).subscribe(
-          (response) => {
-            console.log('Datos enviados exitosamente:', response);
-            // Puedes manejar la respuesta como desees
-          },
-          (error) => {
-            console.error('Error al enviar datos:', error);
-            // Puedes manejar el error como desees
-          }
-        );
-        break;
-      case 'Programas':
-        this.programsService.agregarProgram(datos).subscribe(
-          (response) => {
-            console.log('Datos enviados exitosamente:', response);
-            // Puedes manejar la respuesta como desees
-          },
-          (error) => {
-            console.error('Error al enviar datos:', error);
-            // Puedes manejar el error como desees
-          }
-        );
+        if (operacion === Operacion.Crear) {
+          this.usersService.agregarUser(datos).subscribe(
+            (response) => {
+              console.log('Datos creados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          );
+        } else if (operacion === Operacion.Editar) {
+          this.usersService.actualizarUser(this.id, datos).subscribe(
+            (response) => {
+              console.log('Datos actualizados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          )
+        }
         break;
       case 'Estudiantes':
-        this.studentsService.agregarStudent(datos).subscribe(
-          (response) => {
-            console.log('Datos enviados exitosamente:', response);
-            // Puedes manejar la respuesta como desees
-          },
-          (error) => {
-            console.error('Error al enviar datos:', error);
-            // Puedes manejar el error como desees
-          }
-        );
+        if (operacion === Operacion.Crear) {
+          this.studentsService.agregarStudent(datos).subscribe(
+            (response) => {
+              console.log('Datos creados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          );
+        } else if (operacion === Operacion.Editar) {
+          this.studentsService.actualizarStudent(this.id, datos).subscribe(
+            (response) => {
+              console.log('Datos actualizados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          )
+        }
         break;
+      case 'Computadoras':
+        if (operacion === Operacion.Crear) {
+          this.computersService.agregarComputadora(datos).subscribe(
+            (response) => {
+              console.log('Datos creados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          );
+        } else if (operacion === Operacion.Editar) {
+          this.computersService.actualizarComputadora(this.id, datos).subscribe(
+            (response) => {
+              console.log('Datos actualizados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          )
+        }
+        break;
+      case 'Programas':
+        if (operacion === Operacion.Crear) {
+          this.programsService.agregarProgram(datos).subscribe(
+            (response) => {
+              console.log('Datos creados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          );
+        } else if (operacion === Operacion.Editar) {
+          this.programsService.actualizarProgram(this.id, datos).subscribe(
+            (response) => {
+              console.log('Datos actualizados exitosamente:', response);
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+            }
+          )
+        }
+        break;
+    }
+  }
+
+  private getFormConfig(): any[] {
+    switch (this.tableName) {
+      case 'Usuarios':
+        return [
+          { name: 'email', label: 'Correo Electrónico', type: 'email' },
+          { name: 'fullname', label: 'Nombre Completo', type: 'text' },
+          { name: 'password', label: 'Contraseña', type: 'password' },
+          // { name: 'rol', label: 'Rol', type:'number' },
+        ];
+      case 'Computadoras':
+        return [
+          { name: 'name', label: 'Nombre', type: 'text' },
+          { name: 'brand', label: 'Marca', type: 'text' },
+          { name: 'model', label: 'Modelo', type: 'text' },
+          { name: 'serie', label: 'Número de Serie', type: 'text' },
+          { name: 'details', label: 'Detalles', type: 'text' },
+        ];
+      case 'Programas':
+        return [
+          { name: 'name', label: 'Nombre', type: 'text' },
+          { name: 'version', label: 'Versión', type: 'text' },
+          { name: 'observations', label: 'Observaciones', type: 'text' },
+        ];
+      case 'Estudiantes':
+        return [
+          { name: 'dni', label: 'DNI', type: 'text' },
+          { name: 'fullname', label: 'Nombre completo', type: 'text' },
+        ];
       default:
-        console.warn('Tabla no reconocida:', this.tableName);
-        break;
+        return ['no existe el campo'];
+    }
+  }
+
+  borrarItem(item: any) {
+    const idToDelete = item?.id;
+    // Lógica para borrar el elemento
+    if (idToDelete === undefined) {
+      console.error('No se puede continuar con la operación.');
+      return;
+    }
+    const confirmacion = window.confirm('¿Estás seguro de que deseas borrar este elemento?');
+
+    if (confirmacion) {
+      this.enviarDatosAlServicio(Operacion.Eliminar, idToDelete);
     }
   }
 
