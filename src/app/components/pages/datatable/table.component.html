@@ -42,12 +42,11 @@
     </table>
 </div>
 <ng-template #template>
-    <app-reactive-form 
-        #reactiveForm 
-        [formConfig]="formConfig" 
-        [data]="data" 
-        (save)="onSave($event)"
-        [operacion]="operacionCapitalizada" 
-        [table]="tableName">
+    <app-reactive-form #reactiveForm [formConfig]="formConfig" [data]="data" (save)="onSave($event)"
+        [operacion]="operacionCapitalizada" [table]="tableName">
     </app-reactive-form>
 </ng-template>
+
+<div>
+    <app-custom-snackbar #snackbarComponent></app-custom-snackbar>
+</div>

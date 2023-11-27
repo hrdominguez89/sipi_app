@@ -64,7 +64,7 @@ export class DashboardAdminComponent {
 
     if (dataObservable) {
       dataObservable.subscribe(data => {
-        const columnHeaders = Object.keys(data[0]);
+        const columnHeaders = Object?.keys(data[0]) ;
 
         // Actualiza los datos y encabezados combinados
         this.dataSharingService.updateTableDataAndHeaders({ data, headers: columnHeaders });

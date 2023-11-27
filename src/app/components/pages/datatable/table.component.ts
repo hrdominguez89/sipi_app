@@ -12,6 +12,7 @@ import { ComputersService } from '../../../services/computers.service';
 import { StudentsService } from '../../../services/students.service';
 import { ReactiveFormComponent } from '../../reactive-form/reactive-form.component';
 import { ViewChild } from '@angular/core';
+import { CustomSnackbarComponent } from '../../commons/custom-snackbar/custom-snackbar.component';
 
 export enum Operacion {
   Crear = 'crear',
@@ -38,6 +39,7 @@ export class TableComponent implements OnInit {
   operacionCapitalizada: string = '';
 
   @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
+  @ViewChild(CustomSnackbarComponent) snackbarComponent!: CustomSnackbarComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -103,18 +105,26 @@ export class TableComponent implements OnInit {
           this.usersService.agregarUser(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
+              this.snackbarComponent.message = `Creación exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           );
         } else if (operacion === Operacion.Editar) {
           this.usersService.actualizarUser(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
+              this.snackbarComponent.message = `Actualización exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Actualización fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           )
         }
@@ -124,18 +134,26 @@ export class TableComponent implements OnInit {
           this.studentsService.agregarStudent(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
+              this.snackbarComponent.message = `Creación exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           );
         } else if (operacion === Operacion.Editar) {
           this.studentsService.actualizarStudent(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
+              this.snackbarComponent.message = `Actualización exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Actualización fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           )
         }
@@ -145,18 +163,26 @@ export class TableComponent implements OnInit {
           this.computersService.agregarComputadora(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
+              this.snackbarComponent.message = `Creación exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           );
         } else if (operacion === Operacion.Editar) {
           this.computersService.actualizarComputadora(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
+              this.snackbarComponent.message = `Actualización exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Actualización fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           )
         }
@@ -166,18 +192,26 @@ export class TableComponent implements OnInit {
           this.programsService.agregarProgram(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
+              this.snackbarComponent.message = `Creación exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           );
         } else if (operacion === Operacion.Editar) {
           this.programsService.actualizarProgram(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
+              this.snackbarComponent.message = `Actualización exitosa`
+              this.snackbarComponent.show();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Actualización fallida ${error.error.message}`
+              this.snackbarComponent.show();
             }
           )
         }
@@ -222,7 +256,8 @@ export class TableComponent implements OnInit {
     const idToDelete = item?.id;
     // Lógica para borrar el elemento
     if (idToDelete === undefined) {
-      console.error('No se puede continuar con la operación.');
+      this.snackbarComponent.message = `No es posible continuar con la operación`
+      this.snackbarComponent.show();
       return;
     }
     const confirmacion = window.confirm('¿Estás seguro de que deseas borrar este elemento?');
