@@ -1,0 +1,33 @@
+.container-banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 30px;
+}
+
+.container-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 5px;
+}
+
+.container-text img {
+    width: 150px;
+}
+
+.container-banner-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 5px;
+}
+
+.container-button button {
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.container-table {
+    padding: 0px 30px;
+    min-height: 100vh;
+}
