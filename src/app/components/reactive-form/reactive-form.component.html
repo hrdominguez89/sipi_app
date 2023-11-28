@@ -3,7 +3,7 @@
     <p>Todos los campos son requeridos (*)</p>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div *ngFor="let field of formConfig">
-            <mat-form-field>
+            <mat-form-field *ngIf="field.type !== 'select'">
                 <input matInput [type]="field.type" [formControlName]="field.name" placeholder="{{ field.label }} *"
                     required="#reactiveForm" />
                 <div *ngIf="form.get(field.name)?.hasError('invalidEmail') && form.get(field.name)?.touched"
@@ -15,6 +15,14 @@
                     class="error-message">
                     La {{ field.label }} debe tener al menos 4 caracteres.
                 </div>
+            </mat-form-field>
+            <mat-form-field *ngIf="field.type === 'select'">
+                <mat-label>{{ field.label }}</mat-label>
+                <mat-select [formControlName]="field.name">
+                    <mat-option *ngFor="let option of field.options" [value]="option.value">
+                        {{ option.label }}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
 
         </div>

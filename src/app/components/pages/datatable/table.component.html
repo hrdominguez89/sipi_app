@@ -20,12 +20,14 @@
 
 <div class="container-table">
     <table datatable class="table" *ngIf="tableData && tableData.length > 0">
-        <thead>
-            <tr>
-                <th *ngFor="let header of columnHeaders">{{ header }}</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+        <ng-container>
+            <thead>
+                <tr>
+                    <th *ngFor="let header of columnHeaders">{{ header }}</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+        </ng-container>
         <tbody>
             <tr *ngFor="let item of tableData">
                 <td *ngFor="let header of columnHeaders">{{ item[header] }}</td>
@@ -45,6 +47,7 @@
     <app-reactive-form #reactiveForm [formConfig]="formConfig" [data]="data" (save)="onSave($event)"
         [operacion]="operacionCapitalizada" [table]="tableName">
     </app-reactive-form>
+    
 </ng-template>
 
 <div>

@@ -26,14 +26,12 @@ export class LoginComponent {
   onSubmit() {
     this.authService.loginAndRedirect(this.username, this.password).subscribe(
       (res) => {
-        this.snackbarComponent.message = `Ingreso exitoso ${res}`
-        this.snackbarComponent.snackbarType = 'success'
+        this.snackbarComponent.message = `Ingreso exitoso ${this.username}`
         this.snackbarComponent.show();
       },
       err => {
         console.error(err)
         this.snackbarComponent.message = `Ingreso fallido ${err.error.message}`;
-        this.snackbarComponent.snackbarType = 'error'
         this.snackbarComponent.show();
       }
     );

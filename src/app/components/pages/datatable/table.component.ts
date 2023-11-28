@@ -33,10 +33,15 @@ export class TableComponent implements OnInit {
   data: any = null;
   id: number = 0;
   formConfig: any[] = [];
-
-  private matDialogRef!: MatDialogRef<DialogTemplateComponent>
   operacionActual: Operacion = Operacion.Crear;
   operacionCapitalizada: string = '';
+  selectOptions: any[] = [
+    { label: 'Administrador', value: 1 },
+    { label: 'Profesor', value: 2 },
+    { label: 'Bedele', value: 3 },
+  ]
+
+  private matDialogRef!: MatDialogRef<DialogTemplateComponent>;
 
   @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
   @ViewChild(CustomSnackbarComponent) snackbarComponent!: CustomSnackbarComponent;
@@ -58,15 +63,12 @@ export class TableComponent implements OnInit {
 
     // Se suscribe al servicio de comunicación para recibir actualizaciones
     this.dataSharingService.getDataAndHeaders()
-      .pipe(take(1)) // Se suscribe solo una vez
       .subscribe(data => {
         this.tableData = data.data;
         this.columnHeaders = data.headers;
       });
 
     this.formConfig = this.getFormConfig();
-
-
   }
 
   openDialogTemplate(template: TemplateRef<any>, data: any = null) {
@@ -82,7 +84,6 @@ export class TableComponent implements OnInit {
     this.matDialogRef
       .afterClosed()
       .subscribe(res => {
-        console.log('dialog close', res)
         this.reactiveFormComponent.resetForm();
         this.operacionActual = Operacion.Crear;
       })
@@ -220,36 +221,48 @@ export class TableComponent implements OnInit {
   }
 
   private getFormConfig(): any[] {
+    let baseConfig: any[] = [];
+
     switch (this.tableName) {
       case 'Usuarios':
-        return [
+        baseConfig = [
           { name: 'email', label: 'Correo Electrónico', type: 'email' },
           { name: 'fullname', label: 'Nombre Completo', type: 'text' },
           { name: 'password', label: 'Contraseña', type: 'password' },
-          // { name: 'rol', label: 'Rol', type:'number' },
+          {
+            name: 'rol',
+            label: 'Rol',
+            type: 'select',
+            options: this.selectOptions,
+          },
         ];
+        break;
       case 'Computadoras':
-        return [
+        baseConfig = [
           { name: 'name', label: 'Nombre', type: 'text' },
           { name: 'brand', label: 'Marca', type: 'text' },
           { name: 'model', label: 'Modelo', type: 'text' },
           { name: 'serie', label: 'Número de Serie', type: 'text' },
           { name: 'details', label: 'Detalles', type: 'text' },
         ];
+        break;
       case 'Programas':
-        return [
+        baseConfig = [
           { name: 'name', label: 'Nombre', type: 'text' },
           { name: 'version', label: 'Versión', type: 'text' },
           { name: 'observations', label: 'Observaciones', type: 'text' },
         ];
+        break;
       case 'Estudiantes':
-        return [
+        baseConfig = [
           { name: 'dni', label: 'DNI', type: 'text' },
           { name: 'fullname', label: 'Nombre completo', type: 'text' },
         ];
+        break;
       default:
         return ['no existe el campo'];
     }
+    return baseConfig;
   }
 
   borrarItem(item: any) {

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,7 +22,7 @@ import { ReactiveFormComponent } from './components/reactive-form/reactive-form.
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbarComponent } from './components/commons/custom-snackbar/custom-snackbar.component';
-
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -50,6 +50,7 @@ import { CustomSnackbarComponent } from './components/commons/custom-snackbar/cu
     MatDialogModule,
     MatIconModule,
     MatSnackBarModule,
+    MatSelectModule,
   ],
   providers: [
     {
@@ -58,6 +59,7 @@ import { CustomSnackbarComponent } from './components/commons/custom-snackbar/cu
       multi: true,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }
