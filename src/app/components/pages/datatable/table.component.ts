@@ -1,8 +1,7 @@
 // table.component.ts
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataSharingService } from '../../../services/data-sharing.service';
-import { take } from 'rxjs';
 import { DialogService } from '../../../services/dialog.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DialogTemplateComponent } from '../../commons/dialog-template/dialog-template.component';
@@ -13,6 +12,7 @@ import { StudentsService } from '../../../services/students.service';
 import { ReactiveFormComponent } from '../../reactive-form/reactive-form.component';
 import { ViewChild } from '@angular/core';
 import { CustomSnackbarComponent } from '../../commons/custom-snackbar/custom-snackbar.component';
+import { Subject, takeUntil } from 'rxjs';
 
 export enum Operacion {
   Crear = 'crear',
@@ -26,7 +26,7 @@ export enum Operacion {
   styleUrls: ['./table.component.css'],
 })
 
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, OnDestroy {
   tableData: any[] = [];
   columnHeaders: string[] = [];
   @Input() tableName: string | null = null;
@@ -40,8 +40,9 @@ export class TableComponent implements OnInit {
     { label: 'Profesor', value: 2 },
     { label: 'Bedele', value: 3 },
   ]
-
+  shouldRenderTable: boolean = true;
   private matDialogRef!: MatDialogRef<DialogTemplateComponent>;
+  private destroy$ = new Subject<void>();
 
   @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
   @ViewChild(CustomSnackbarComponent) snackbarComponent!: CustomSnackbarComponent;
@@ -54,6 +55,7 @@ export class TableComponent implements OnInit {
     private programsService: ProgramsService,
     private computersService: ComputersService,
     private studentsService: StudentsService,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
@@ -63,12 +65,15 @@ export class TableComponent implements OnInit {
 
     // Se suscribe al servicio de comunicación para recibir actualizaciones
     this.dataSharingService.getDataAndHeaders()
+      .pipe(takeUntil(this.destroy$))
       .subscribe(data => {
         this.tableData = data.data;
         this.columnHeaders = data.headers;
       });
 
     this.formConfig = this.getFormConfig();
+    this.cdr.detectChanges();
+
   }
 
   openDialogTemplate(template: TemplateRef<any>, data: any = null) {
@@ -280,5 +285,7 @@ export class TableComponent implements OnInit {
     }
   }
 
-
+  ngOnDestroy() {
+    this.destroy$.next();
+  }
 }

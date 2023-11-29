@@ -1,53 +1,55 @@
 <!-- dynamic-table.component.html -->
-<div class="container-banner">
-    <div class="container-text">
-        <h1>{{tableName}}</h1>
-        <img src="../../../../assets/images/logo_ifts_11.png" alt="logo ifts11">
-    </div>
-    <div class="container-banner-actions">
-        <div class="container-title">
-            <strong>
-                <h2>Lista de {{ tableName }}</h2>
-            </strong>
+<div class="container">
+    <div class="container-banner">
+        <div class="container-text">
+            <h1>{{tableName}}</h1>
+            <img src="../../../../assets/images/logo_ifts_11.png" alt="logo ifts11">
         </div>
-        <div class="container-button">
-            <button mat-raised-button color="accent" (click)="openDialogTemplate(template)">
-                Agregar {{tableName}}
-            </button>
+        <div class="container-banner-actions">
+            <div class="container-title">
+                <strong>
+                    <h2>Lista de {{ tableName }}</h2>
+                </strong>
+            </div>
+            <div class="container-button">
+                <button mat-raised-button color="accent" (click)="openDialogTemplate(template)">
+                    Agregar {{tableName}}
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="container-table">
-    <table datatable class="table" *ngIf="tableData && tableData.length > 0">
-        <ng-container>
-            <thead>
-                <tr>
-                    <th *ngFor="let header of columnHeaders">{{ header }}</th>
-                    <th>Acciones</th>
+    <div class="container-table" *ngIf="shouldRenderTable">
+        <table datatable class="table" *ngIf="tableData && tableData.length > 0">
+            <ng-container>
+                <thead>
+                    <tr>
+                        <th *ngFor="let header of columnHeaders">{{ header }}</th>
+                        <th>actions</th>
+                    </tr>
+                </thead>
+            </ng-container>
+            <tbody>
+                <tr *ngFor="let item of tableData">
+                    <td *ngFor="let header of columnHeaders">{{ item[header] }}</td>
+                    <td>
+                        <button mat-icon-button (click)="openDialogTemplate(template, item)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="borrarItem(item)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
                 </tr>
-            </thead>
-        </ng-container>
-        <tbody>
-            <tr *ngFor="let item of tableData">
-                <td *ngFor="let header of columnHeaders">{{ item[header] }}</td>
-                <td>
-                    <button mat-icon-button (click)="openDialogTemplate(template, item)">
-                        <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="borrarItem(item)">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
 <ng-template #template>
     <app-reactive-form #reactiveForm [formConfig]="formConfig" [data]="data" (save)="onSave($event)"
         [operacion]="operacionCapitalizada" [table]="tableName">
     </app-reactive-form>
-    
+
 </ng-template>
 
 <div>

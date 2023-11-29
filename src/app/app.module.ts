@@ -23,6 +23,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbarComponent } from './components/commons/custom-snackbar/custom-snackbar.component';
 import { MatSelectModule } from '@angular/material/select';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarComponent } from './components/calendar/calendar.component';
+
+
 
 @NgModule({
   declarations: [
@@ -36,7 +40,8 @@ import { MatSelectModule } from '@angular/material/select';
     FooterComponent,
     DialogTemplateComponent,
     ReactiveFormComponent,
-    CustomSnackbarComponent
+    CustomSnackbarComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,
@@ -51,6 +56,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatIconModule,
     MatSnackBarModule,
     MatSelectModule,
+    FullCalendarModule
   ],
   providers: [
     {

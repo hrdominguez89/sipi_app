@@ -1,4 +1,3 @@
-// dashboard-admin.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProgramsService } from 'src/app/services/programs.service';
@@ -23,7 +22,8 @@ export class DashboardAdminComponent {
     { id: '1', title: 'Usuarios', description: 'ABM de usuarios.', img: '../../../assets/images/usuarios.png' },
     { id: '2', title: 'Computadoras', description: 'ABM de computadoras y notebooks.', img: '../../../assets/images/computadoras.png' },
     { id: '3', title: 'Estudiantes', description: 'Lista de estudiantes ', img: '../../../assets/images/solicitudes.png' },
-    { id: '4', title: 'Programas', description: 'Lista de programas. ', img: '../../../assets/images/solicitudes.png' }
+    { id: '4', title: 'Programas', description: 'ABM de programas habilitados para su instalación.', img: '../../../assets/images/programas.png' },
+    { id: '5', title: 'Calendario y asignaciones', description: 'Entregas programadas y asignación de computadoras. ', img: '../../../assets/images/calendar.png' },
   ]
 
   constructor(
@@ -35,6 +35,7 @@ export class DashboardAdminComponent {
     private usersService: UsersService,
 
   ) { }
+
 
   onCardClick(cardId: string): void {
     let dataObservable: Observable<any> | null = null;
@@ -57,6 +58,9 @@ export class DashboardAdminComponent {
         dataObservable = this.programsService.obtenerPrograms();
         tableName = 'Programas';
         break;
+      case '5':
+        this.router.navigate(['/calendar']);
+        break;
       default:
         // Manejar un caso no esperado si es necesario
         break;
@@ -64,7 +68,7 @@ export class DashboardAdminComponent {
 
     if (dataObservable) {
       dataObservable.subscribe(data => {
-        const columnHeaders = Object?.keys(data[0]) ;
+        const columnHeaders = Object?.keys(data[0]);
 
         // Actualiza los datos y encabezados combinados
         this.dataSharingService.updateTableDataAndHeaders({ data, headers: columnHeaders });
@@ -74,7 +78,11 @@ export class DashboardAdminComponent {
           // Navega a la ruta /table/:tableName
           this.router.navigate(['/table', tableName]);
         }
-      });
+      },
+        error => {
+          console.error(error)
+        }
+      );
     }
   }
 }

@@ -29,6 +29,11 @@ export class NavbarComponent implements OnInit {
     return this.router.url.includes('/table');
   }
 
+  isExcludedRoute(): boolean {
+  const excludedRoutes = ['/login', '/dashboard-admin'];
+  return excludedRoutes.every(route => !this.router.url.includes(route));
+}
+
   volverAtras(): void {
     this.location.back();
   }

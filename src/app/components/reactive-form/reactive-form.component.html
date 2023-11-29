@@ -1,7 +1,7 @@
-<h1 mat-dialog-title>{{operacion}} {{table}} </h1>
-<div mat-dialog-content>
+<h1 mat-dialog-title class="dialog-title">{{operacion}} {{table}} </h1>
+<div mat-dialog-content class="dialog-content">
     <p>Todos los campos son requeridos (*)</p>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-reactive-form">
         <div *ngFor="let field of formConfig">
             <mat-form-field *ngIf="field.type !== 'select'">
                 <input matInput [type]="field.type" [formControlName]="field.name" placeholder="{{ field.label }} *"
