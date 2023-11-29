@@ -24,7 +24,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomSnackbarComponent } from './components/commons/custom-snackbar/custom-snackbar.component';
 import { MatSelectModule } from '@angular/material/select';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarComponent } from './components/pages/calendar/calendar.component';
 
 
 
@@ -42,6 +42,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
     ReactiveFormComponent,
     CustomSnackbarComponent,
     CalendarComponent
+
   ],
   imports: [
     BrowserModule,

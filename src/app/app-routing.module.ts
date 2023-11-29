@@ -4,7 +4,7 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { DashboardAdminComponent } from './components/pages/dashboard-admin/dashboard-admin.component';
 import { TableComponent } from './components/pages/datatable/table.component';
 import { DashboardProfComponent } from './components/pages/dashboard-prof/dashboard-prof.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarComponent } from './components/pages/calendar/calendar.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
