@@ -1,3 +1,55 @@
-<div class="container">
-    tabla profesor
+<!-- dynamic-table.component.html -->
+<div class="container-banner">
+    <div class="container-text">
+        <h1>Solicitudes</h1>
+        <img src="../../../../assets/images/logo_ifts_11.png" alt="logo ifts11">
+    </div>
+    <div class="container-banner-actions">
+        <div class="container-title">
+            <strong>
+                <h2>Mis solicitudes</h2>
+            </strong>
+        </div>
+        <div class="container-button">
+            <button mat-raised-button color="accent" disabled="true">
+                Nueva solicitud
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-table">
+    <table datatable class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Materia</th>
+                <th>Programas Solicitados</th>
+                <th>Observaciones</th>
+                <th>Solicitado el</th>
+                <th>Solicitado para el</th>
+                <th>Cant solicitada</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>POO</td>
+                <td>Visual Studio, Git</td>
+                <td>Última versión estabale de GIT</td>
+                <td>01/01/2023</td>
+                <td>01/01/2023</td>
+                <td>15</td>
+                <td>Aceptado</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<ng-template #template>
+
+</ng-template>
+
+<div>
+    <app-custom-snackbar #snackbarComponent></app-custom-snackbar>
 </div>

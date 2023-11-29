@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +20,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DialogTemplateComponent } from './components/commons/dialog-template/dialog-template.component';
 import { ReactiveFormComponent } from './components/reactive-form/reactive-form.component';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { CustomSnackbarComponent } from './components/commons/custom-snackbar/custom-snackbar.component';
+import { MatSelectModule } from '@angular/material/select';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import { CalendarComponent } from './components/calendar/calendar.component';
+
 
 
 @NgModule({
@@ -33,7 +39,9 @@ import { MatIconModule } from '@angular/material/icon';
     CardComponent,
     FooterComponent,
     DialogTemplateComponent,
-    ReactiveFormComponent
+    ReactiveFormComponent,
+    CustomSnackbarComponent,
+    CalendarComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +53,10 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     FormsModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule,
+    MatSelectModule,
+    FullCalendarModule
   ],
   providers: [
     {
@@ -54,6 +65,7 @@ import { MatIconModule } from '@angular/material/icon';
       multi: true,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { CustomSnackbarComponent } from '../../commons/custom-snackbar/custom-snackbar.component';
 
 @Component({
   selector: 'app-login',
@@ -20,12 +21,19 @@ export class LoginComponent {
       formularioPasswordUsuario: ['', [Validators.required, Validators.minLength(4)]],
     });
   }
+  @ViewChild(CustomSnackbarComponent) snackbarComponent!: CustomSnackbarComponent;
 
   onSubmit() {
     this.authService.loginAndRedirect(this.username, this.password).subscribe(
-      // Manejar cualquier resultado o error si es necesario
-      () => { },
-      error => console.error(error)
+      (res) => {
+        this.snackbarComponent.message = `Ingreso exitoso ${this.username}`
+        this.snackbarComponent.show();
+      },
+      err => {
+        console.error(err)
+        this.snackbarComponent.message = `Ingreso fallido ${err.error.message}`;
+        this.snackbarComponent.show();
+      }
     );
   }
 
