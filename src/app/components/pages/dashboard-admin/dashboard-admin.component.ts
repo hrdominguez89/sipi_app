@@ -21,9 +21,11 @@ export class DashboardAdminComponent {
   cardData = [
     { id: '1', title: 'Usuarios', description: 'ABM de usuarios.', img: '../../../assets/images/usuarios.png' },
     { id: '2', title: 'Computadoras', description: 'ABM de computadoras y notebooks.', img: '../../../assets/images/computadoras.png' },
-    { id: '3', title: 'Estudiantes', description: 'Lista de estudiantes ', img: '../../../assets/images/solicitudes.png' },
+    { id: '3', title: 'Estudiantes', description: 'Lista de estudiantes ', img: '../../../assets/images/students.jpg' },
     { id: '4', title: 'Programas', description: 'ABM de programas habilitados para su instalación.', img: '../../../assets/images/programas.png' },
-    { id: '5', title: 'Calendario y asignaciones', description: 'Entregas programadas y asignación de computadoras. ', img: '../../../assets/images/calendar.png' },
+    { id: '5', title: 'Devoluciones', description: 'Devolución de computadoras.', img: '../../../assets/images/devoluciones.png' },
+    { id: '6', title: 'Solicitudes', description: 'Lista de solicitudes de notebooks enviadas por los profesores.', img: '../../../assets/images/solicitudes.png' },
+    { id: '7', title: 'Calendario y asignaciones', description: 'Entregas programadas y asignación de computadoras. ', img: '../../../assets/images/calendar.png' },
   ]
 
   constructor(
@@ -59,6 +61,14 @@ export class DashboardAdminComponent {
         tableName = 'Programas';
         break;
       case '5':
+        // dataObservable = this.programsService.obtenerPrograms();
+        tableName = 'Devoluciones';
+        break;
+      case '6':
+        // dataObservable = this.programsService.obtenerPrograms();
+        tableName = 'Solicitudes';
+        break;
+      case '7':
         this.router.navigate(['/calendar']);
         break;
       default:
@@ -68,13 +78,11 @@ export class DashboardAdminComponent {
 
     if (dataObservable) {
       dataObservable.subscribe(data => {
-        const columnHeaders = Object?.keys(data[0]);
-
+        const columnHeaders = data.length > 0 ? Object.keys(data[0]) : [];
         // Actualiza los datos y encabezados combinados
         this.dataSharingService.updateTableDataAndHeaders({ data, headers: columnHeaders });
 
-        // Verifica que tableName tiene un valor antes de navegar
-        if (tableName) {
+        if (cardId) {
           // Navega a la ruta /table/:tableName
           this.router.navigate(['/table', tableName]);
         }

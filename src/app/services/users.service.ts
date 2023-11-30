@@ -33,6 +33,6 @@ export class UsersService {
 
   // Eliminar un usuario por ID
   eliminarUser(userId: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${userId}`);
+    return this.http.delete<any>(`${this.apiUrl}/delete/${userId}`);
   }
 }

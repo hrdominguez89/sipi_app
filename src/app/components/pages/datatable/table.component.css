@@ -13,11 +13,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 5px;
+    padding: 5px 15px;
 }
 
 .container-text img {
-    width: 150px;
+    width: 100px;
 }
 
 .container-banner-actions {
@@ -31,8 +31,18 @@
     border-radius: 4px;
 }
 
-th.sorting, td {
+th.sorting,
+td {
     text-align: center;
     padding: 13px 0px;
 
+}
+
+.mat-dialog-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.container-table {
+    min-height: 40vh;
 }

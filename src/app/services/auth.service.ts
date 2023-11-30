@@ -54,7 +54,7 @@ export class AuthService {
         } else if (this.hasBedelRole(userRoleId)) {
             this.router.navigate(['/dashboard-bedel']);
         } else {
-            this.router.navigate(['/dashboard-default']);
+            this.router.navigate(['/default']);
         }
     }
 

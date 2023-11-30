@@ -1,0 +1,10 @@
+.container {
+    width: 100%;
+    min-height: 80vh;
+}
+
+.container h1 {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0px;
+}

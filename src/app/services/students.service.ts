@@ -33,6 +33,6 @@ export class StudentsService {
 
   // Eliminar un student por ID
   eliminarStudent(studentId: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${studentId}`);
+    return this.http.delete<any>(`${this.apiUrl}/delete/${studentId}`);
   }
 }

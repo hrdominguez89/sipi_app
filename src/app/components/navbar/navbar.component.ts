@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, UserService } from 'src/app/services/user.service';
 import { Location } from '@angular/common';
+import { DataSharingService } from 'src/app/services/data-sharing.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +11,7 @@ import { Location } from '@angular/common';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private userService: UserService, private router: Router, private location: Location) { }
+  constructor(private userService: UserService, private router: Router, private location: Location, private datasharingservice: DataSharingService) { }
 
   ngOnInit() {
 
@@ -18,6 +19,7 @@ export class NavbarComponent implements OnInit {
 
   desloguear() {
     this.userService.logout();
+    // this.datasharingservice.
     this.router.navigate(["/"])
   }
 

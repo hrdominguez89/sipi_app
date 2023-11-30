@@ -1,5 +1,5 @@
 // table.component.ts
-import { Component, OnInit, Input, TemplateRef, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ChangeDetectorRef, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataSharingService } from '../../../services/data-sharing.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -12,7 +12,6 @@ import { StudentsService } from '../../../services/students.service';
 import { ReactiveFormComponent } from '../../reactive-form/reactive-form.component';
 import { ViewChild } from '@angular/core';
 import { CustomSnackbarComponent } from '../../commons/custom-snackbar/custom-snackbar.component';
-import { Subject, takeUntil } from 'rxjs';
 
 export enum Operacion {
   Crear = 'crear',
@@ -26,7 +25,7 @@ export enum Operacion {
   styleUrls: ['./table.component.css'],
 })
 
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit {
   tableData: any[] = [];
   columnHeaders: string[] = [];
   @Input() tableName: string | null = null;
@@ -42,7 +41,6 @@ export class TableComponent implements OnInit, OnDestroy {
   ]
   shouldRenderTable: boolean = true;
   private matDialogRef!: MatDialogRef<DialogTemplateComponent>;
-  private destroy$ = new Subject<void>();
 
   @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
   @ViewChild(CustomSnackbarComponent) snackbarComponent!: CustomSnackbarComponent;
@@ -64,8 +62,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.tableName = this.route.snapshot.paramMap.get('tableName');
 
     // Se suscribe al servicio de comunicación para recibir actualizaciones
-    this.dataSharingService.getDataAndHeaders()
-      .pipe(takeUntil(this.destroy$))
+    this.dataSharingService?.getDataAndHeaders()
       .subscribe(data => {
         this.tableData = data.data;
         this.columnHeaders = data.headers;
@@ -133,7 +130,20 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           )
-        }
+        } else if (operacion === Operacion.Eliminar) {
+          this.usersService.eliminarUser(this.id).subscribe(
+            (response) => {
+              console.log('Datos eliminados exitosamente:', response);
+              this.snackbarComponent.message = `Usuario eliminado`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
+        };
         break;
       case 'Estudiantes':
         if (operacion === Operacion.Crear) {
@@ -159,6 +169,19 @@ export class TableComponent implements OnInit, OnDestroy {
             (error) => {
               console.error('Error al enviar datos:', error);
               this.snackbarComponent.message = `Actualización fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
+        } else if (operacion === Operacion.Eliminar) {
+          this.studentsService.eliminarStudent(this.id).subscribe(
+            (response) => {
+              console.log('Datos eliminados exitosamente', response);
+              this.snackbarComponent.message = `Estudiante eliminado`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
               this.snackbarComponent.show();
             }
           )
@@ -191,7 +214,21 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           )
-        }
+        } else if (operacion === Operacion.Eliminar) {
+          this.computersService.eliminarComputadora(this.id).subscribe(
+
+            (response) => {
+              console.log('Datos eliminados exitosamente:', response);
+              this.snackbarComponent.message = `Computadora eliminada`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
+        };
         break;
       case 'Programas':
         if (operacion === Operacion.Crear) {
@@ -220,7 +257,20 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           )
-        }
+        } else if (operacion === Operacion.Eliminar) {
+          this.programsService.eliminarProgram(this.id).subscribe(
+            (response) => {
+              console.log('Datos eliminados exitosamente:', response);
+              this.snackbarComponent.message = `Programa eliminado`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
+        };
         break;
     }
   }
@@ -270,22 +320,30 @@ export class TableComponent implements OnInit, OnDestroy {
     return baseConfig;
   }
 
-  borrarItem(item: any) {
-    const idToDelete = item?.id;
+  openDialogTemplate1(template: TemplateRef<any>, item: any = null) {
+    this.id = item?.id;
+    this.operacionActual = item && Operacion.Eliminar;
+
+    this.matDialogRef = this.dialogService.openDialogTemplate({
+      template,
+    })
+    this.matDialogRef
+      .afterClosed()
+      .subscribe(res => {
+        this.operacionActual = Operacion.Eliminar;
+      })
+  }
+
+  borrarItem() {
     // Lógica para borrar el elemento
-    if (idToDelete === undefined) {
+    const id = this.id
+    if (id === undefined) {
       this.snackbarComponent.message = `No es posible continuar con la operación`
       this.snackbarComponent.show();
       return;
+    } else {
+      this.enviarDatosAlServicio(this.operacionActual, id);
+      this.matDialogRef.close();
     }
-    const confirmacion = window.confirm('¿Estás seguro de que deseas borrar este elemento?');
-
-    if (confirmacion) {
-      this.enviarDatosAlServicio(Operacion.Eliminar, idToDelete);
-    }
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
   }
 }
