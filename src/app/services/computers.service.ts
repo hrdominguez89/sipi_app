@@ -1,4 +1,3 @@
-// Ejemplo para el servicio de computadoras (computadoras.service.ts)
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ComputersService {
-  private apiUrl = 'http://localhost/api/computers'; // Reemplaza esto con la URL real de tu API
+  private apiUrl = 'http://localhost/api/computers';
 
   constructor(private http: HttpClient) { }
 
@@ -33,7 +32,24 @@ export class ComputersService {
 
   // Eliminar una computadora por ID
   eliminarComputadora(computerId: number): Observable<any> {
-    console.log(computerId)
     return this.http.delete<any>(`${this.apiUrl}/delete/${computerId}`);
   }
+
+  computadorasDisponibles(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/available`);
+  }
+
+  computadorasNoDisponibles(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/notavailable`)
+  }
+
+  solicitudComputadora(request: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/requests`, request);
+  }
+
+  retornarComputadora(returnId: any): Observable<any> {
+    console.log(returnId)
+    return this.http.patch<any>(`${this.apiUrl}/return`, returnId);
+  }
+
 }

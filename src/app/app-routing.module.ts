@@ -7,16 +7,17 @@ import { DashboardProfComponent } from './components/pages/dashboard-prof/dashbo
 import { CalendarComponent } from './components/pages/calendar/calendar.component';
 import { AuthGuard } from './auth.guard';
 import { DefaultComponent } from './components/pages/default/default.component';
+import { TableCalendarComponent } from './components/pages/table-calendar/table-calendar.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'dashboard-admin', component: DashboardAdminComponent, canActivate: [AuthGuard] },
   { path: 'dashboard-prof', component: DashboardProfComponent, canActivate: [AuthGuard] },
-  { path: 'dashboard-bedel', component: DefaultComponent, canActivate: [AuthGuard] }, // modificar component
   { path: 'default', component: DefaultComponent, canActivate: [AuthGuard] },
   { path: 'table/:tableName', component: TableComponent, canActivate: [AuthGuard] },
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
+  { path: 'calendar/:eventoId', component: TableCalendarComponent, canActivate: [AuthGuard] },
 
 ];
 

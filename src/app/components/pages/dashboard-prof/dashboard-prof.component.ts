@@ -19,9 +19,11 @@ export class DashboardProfComponent implements OnInit {
   displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<any>();
   selectOptions: any[] = [
-    { label: 'visual code', value: 'visual code' },
+    { label: 'Visual Studio Code', value: 'visual code' },
     { label: 'Visio', value: 'Visio' },
     { label: 'Sql', value: 'Sql' },
+    { label: 'Node', value: 'node' },
+    { label: 'Git', value: 'git' },
   ]
   formConfig: any[] = [];
   operacionCapitalizada: IOperacion = IOperacion.Crear
@@ -111,7 +113,7 @@ export class DashboardProfComponent implements OnInit {
         options: this.selectOptions,
       },
       { name: "requestedDate", label: 'Fecha', type: 'date' },
-      { name: "requestedAmount", label: 'Cantidad solicitada', type: 'number' },
+      { name: "requestedAmount", label: 'Cantidad solicitada', type: 'text' },
       { name: "observations", label: 'Observaciones', type: 'text' },
     ];
     return baseConfig;

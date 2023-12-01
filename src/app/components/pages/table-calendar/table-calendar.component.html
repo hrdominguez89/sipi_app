@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="container-banner">
+        <div class="container-text">
+            <h1>Asignación eventos</h1>
+            <img src="../../../../assets/images/logo_ifts_11.png" alt="logo ifts11">
+        </div>
+        <div class="container-banner-actions">
+            <div class="container-title">
+                <strong>
+                    <h2>Asignación evento N° = {{eventoId}}</h2>
+                </strong>
+            </div>
+        </div>
+    </div>
+
+    <mat-form-field class="form-field">
+        <div class="filter">
+            <mat-label>Buscar</mat-label>
+            <mat-icon>search</mat-icon>
+        </div>
+        <input matInput (input)="applyFilter($event)" />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <!-- Columnas -->
+        <ng-container *ngFor="let column of columnHeaders" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column }} </th>
+            <td mat-cell *matCellDef="let element"> {{ element[column] }} </td>
+        </ng-container>
+
+        <!-- Columna de acciones -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <ng-container>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button mat-dialog-close color="accent"
+                        (click)="solicitudComputadora(element)">Asignar</button>
+                </td>
+            </ng-container>
+        </ng-container>
+
+        <!-- Fila para mostrar datos vacíos o no encontrados -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" *matCellDef="let element"> No se encontraron datos. </td>
+        </tr>
+
+        <!-- Filas de datos -->
+        <tr mat-header-row *matHeaderRowDef="columnHeaders.concat('actions')"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnHeaders.concat('actions')"></tr>
+    </table>
+
+    <!-- Controles de paginación y filtro -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+
+</div>
+
+<div>
+    <app-custom-snackbar #snackbarComponent></app-custom-snackbar>
+</div>

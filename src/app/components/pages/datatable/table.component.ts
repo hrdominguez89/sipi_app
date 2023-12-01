@@ -1,7 +1,5 @@
-// table.component.ts
 import { Component, OnInit, Input, TemplateRef, ChangeDetectorRef, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DataSharingService } from '../../../services/data-sharing.service';
 import { DialogService } from '../../../services/dialog.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { DialogTemplateComponent } from '../../commons/dialog-template/dialog-template.component';
@@ -48,9 +46,9 @@ export class TableComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+
   constructor(
     private route: ActivatedRoute,
-    private dataSharingService: DataSharingService,
     private dialogService: DialogService,
     private usersService: UsersService,
     private programsService: ProgramsService,
@@ -64,19 +62,8 @@ export class TableComponent implements OnInit {
   ngOnInit(): void {
     // Obtiene el nombre de la tabla de los parámetros de la ruta
     this.tableName = this.route.snapshot.paramMap.get('tableName');
-
-    // Se suscribe al servicio de comunicación para recibir actualizaciones
-    this.dataSharingService?.getDataAndHeaders()
-      .subscribe(data => {
-        this.dataSource.data = data.data;
-        this.columnHeaders = data.headers;
-      });
-
+    this.refreshTable()
     this.formConfig = this.getFormConfig();
-    // this.cdr.detectChanges();
-
-
-
   }
 
   ngAfterViewInit() {
@@ -343,11 +330,11 @@ export class TableComponent implements OnInit {
           this.cdr.detectChanges();
         });
       case 'Devoluciones':
-      // return this.programsService.obtenerPrograms().subscribe((dato) => {
-      //   this.dataSource.data = dato;
-      //   this.columnHeaders = Object.keys(dato[0]);
-      //   this.cdr.detectChanges();
-      // });
+        return this.computersService.computadorasNoDisponibles().subscribe((dato) => {
+          this.dataSource.data = dato;
+          this.columnHeaders = Object.keys(dato[0]);
+          this.cdr.detectChanges();
+        });
       case 'Solicitudes':
         return this.requestService.obtenerSolicitudes().subscribe((dato) => {
           this.dataSource.data = dato;
@@ -464,6 +451,24 @@ export class TableComponent implements OnInit {
       (error) => {
         console.error('Error al enviar datos:', error);
         this.snackbarComponent.message = `Solicitud Fallida ${error.error.message}`
+        this.snackbarComponent.show();
+      }
+    );
+  }
+
+  devolverComputadora(item: any) {
+    console.log(item)
+    const returnId = { id: item?.id }
+    this.computersService.retornarComputadora(returnId).subscribe(
+      (response) => {
+        console.log('Datos creados exitosamente:', response);
+        this.snackbarComponent.message = `Devolución exitosa`
+        this.snackbarComponent.show();
+        this.refreshTable();
+      },
+      (error) => {
+        console.error('Error al enviar datos:', error);
+        this.snackbarComponent.message = `Devolución fallida ${error.error.message}`
         this.snackbarComponent.show();
       }
     );

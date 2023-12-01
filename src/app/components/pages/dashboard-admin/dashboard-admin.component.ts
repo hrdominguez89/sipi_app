@@ -4,7 +4,6 @@ import { ProgramsService } from 'src/app/services/programs.service';
 import { ComputersService } from 'src/app/services/computers.service';
 import { StudentsService } from '../../../services/students.service';
 import { UsersService } from 'src/app/services/users.service';
-import { DataSharingService } from 'src/app/services/data-sharing.service';
 import { Observable } from 'rxjs';
 import { RequestsService } from '../../../services/requests.service';
 
@@ -31,7 +30,6 @@ export class DashboardAdminComponent {
 
   constructor(
     private router: Router,
-    private dataSharingService: DataSharingService,
     private programsService: ProgramsService,
     private computersService: ComputersService,
     private studentsService: StudentsService,
@@ -63,7 +61,6 @@ export class DashboardAdminComponent {
         tableName = 'Programas';
         break;
       case '5':
-        // dataObservable = this.programsService.obtenerPrograms();
         tableName = 'Devoluciones';
         break;
       case '6':
@@ -78,21 +75,9 @@ export class DashboardAdminComponent {
         break;
     }
 
-    if (dataObservable) {
-      dataObservable.subscribe(data => {
-        const columnHeaders = data.length > 0 ? Object.keys(data[0]) : [];
-        // Actualiza los datos y encabezados combinados
-        this.dataSharingService.updateTableDataAndHeaders({ data, headers: columnHeaders });
-
-        if (cardId) {
-          // Navega a la ruta /table/:tableName
-          this.router.navigate(['/table', tableName]);
-        }
-      },
-        error => {
-          console.error(error)
-        }
-      );
+    if (cardId) {
+      // Navega a la ruta /table/:tableName
+      this.router.navigate(['/table', tableName]);
     }
   }
 }

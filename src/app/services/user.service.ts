@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { tap, Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs';
 
 export interface User {
     username: string;
@@ -54,7 +54,7 @@ export class UserService {
 
 
     logout() {
-        // Lógica de cierre de sesión aquí (por ejemplo, eliminar del LocalStorage)
+        // Remueve el token del localStorage
         localStorage.removeItem('token');
     }
 
