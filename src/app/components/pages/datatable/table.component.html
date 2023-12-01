@@ -11,7 +11,7 @@
                     <h2>Lista de {{ tableName }}</h2>
                 </strong>
             </div>
-            <div class="container-button">
+            <div class="container-button" *ngIf="tableName !== 'Solicitudes'">
                 <button mat-raised-button color="accent" (click)="openDialogTemplate(template)">
                     Agregar {{tableName}}
                 </button>
@@ -32,13 +32,17 @@
             <tbody>
                 <tr *ngFor="let item of tableData">
                     <td *ngFor="let header of columnHeaders">{{ item[header] }}</td>
-                    <td>
+                    <td *ngIf="tableName !== 'Solicitudes'">
                         <button mat-icon-button (click)="openDialogTemplate(template, item)">
                             <mat-icon>edit</mat-icon>
                         </button>
-                        <button mat-icon-button (click)="openDialogTemplate1(template1,item)">
+                        <button mat-icon-button (click)="openDialogTemplateDelete(template1,item)">
                             <mat-icon>delete</mat-icon>
                         </button>
+                    </td>
+                    <td *ngIf="tableName === 'Solicitudes'">
+                        <button mat-raised-button mat-dialog-close color="accent" (click)="aprobarSolicitud(item)">Aprobar</button>
+                        <button mat-raised-button mat-dialog-close color="warn" (click)="rechazarSolicitud(item)">Rechazar</button>
                     </td>
                 </tr>
             </tbody>

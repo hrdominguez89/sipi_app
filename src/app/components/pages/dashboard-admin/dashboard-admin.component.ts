@@ -6,6 +6,7 @@ import { StudentsService } from '../../../services/students.service';
 import { UsersService } from 'src/app/services/users.service';
 import { DataSharingService } from 'src/app/services/data-sharing.service';
 import { Observable } from 'rxjs';
+import { RequestsService } from '../../../services/requests.service';
 
 @Component({
   selector: 'app-dashboard-admin',
@@ -35,6 +36,7 @@ export class DashboardAdminComponent {
     private computersService: ComputersService,
     private studentsService: StudentsService,
     private usersService: UsersService,
+    private requestsService: RequestsService,
 
   ) { }
 
@@ -65,7 +67,7 @@ export class DashboardAdminComponent {
         tableName = 'Devoluciones';
         break;
       case '6':
-        // dataObservable = this.programsService.obtenerPrograms();
+        dataObservable = this.requestsService.obtenerSolicitudes();
         tableName = 'Solicitudes';
         break;
       case '7':

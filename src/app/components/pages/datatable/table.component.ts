@@ -12,12 +12,10 @@ import { StudentsService } from '../../../services/students.service';
 import { ReactiveFormComponent } from '../../reactive-form/reactive-form.component';
 import { ViewChild } from '@angular/core';
 import { CustomSnackbarComponent } from '../../commons/custom-snackbar/custom-snackbar.component';
+import { IOperacion } from 'src/app/models/operacion.model';
+import { RequestsService } from 'src/app/services/requests.service';
 
-export enum Operacion {
-  Crear = 'crear',
-  Editar = 'editar',
-  Eliminar = 'eliminar',
-}
+
 
 @Component({
   selector: 'app-table',
@@ -32,7 +30,7 @@ export class TableComponent implements OnInit {
   data: any = null;
   id: number = 0;
   formConfig: any[] = [];
-  operacionActual: Operacion = Operacion.Crear;
+  operacionActual: IOperacion = IOperacion.Crear;
   operacionCapitalizada: string = '';
   selectOptions: any[] = [
     { label: 'Administrador', value: 1 },
@@ -40,6 +38,8 @@ export class TableComponent implements OnInit {
     { label: 'Bedele', value: 3 },
   ]
   shouldRenderTable: boolean = true;
+  status: boolean = true;
+
   private matDialogRef!: MatDialogRef<DialogTemplateComponent>;
 
   @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
@@ -53,7 +53,8 @@ export class TableComponent implements OnInit {
     private programsService: ProgramsService,
     private computersService: ComputersService,
     private studentsService: StudentsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private requestService: RequestsService
   ) { }
 
 
@@ -77,7 +78,7 @@ export class TableComponent implements OnInit {
     this.data = data;
     this.id = data?.id;
 
-    this.operacionActual = data ? Operacion.Editar : Operacion.Crear;
+    this.operacionActual = data ? IOperacion.Editar : IOperacion.Crear;
     this.operacionCapitalizada = this.operacionActual.charAt(0).toUpperCase() + this.operacionActual.slice(1);
 
     this.matDialogRef = this.dialogService.openDialogTemplate({
@@ -87,10 +88,10 @@ export class TableComponent implements OnInit {
       .afterClosed()
       .subscribe(res => {
         this.reactiveFormComponent.resetForm();
-        this.operacionActual = Operacion.Crear;
+        this.operacionActual = IOperacion.Crear;
       })
 
-    if (this.operacionActual === Operacion.Editar) {
+    if (this.operacionActual === IOperacion.Editar) {
       this.reactiveFormComponent?.fillForm();
     }
   }
@@ -104,7 +105,7 @@ export class TableComponent implements OnInit {
     // enviar datos al servicio según la operación y la tabla
     switch (this.tableName) {
       case 'Usuarios':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.usersService.agregarUser(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -117,7 +118,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.usersService.actualizarUser(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -130,7 +131,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           )
-        } else if (operacion === Operacion.Eliminar) {
+        } else if (operacion === IOperacion.Eliminar) {
           this.usersService.eliminarUser(this.id).subscribe(
             (response) => {
               console.log('Datos eliminados exitosamente:', response);
@@ -146,7 +147,7 @@ export class TableComponent implements OnInit {
         };
         break;
       case 'Estudiantes':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.studentsService.agregarStudent(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -159,7 +160,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.studentsService.actualizarStudent(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -172,7 +173,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           )
-        } else if (operacion === Operacion.Eliminar) {
+        } else if (operacion === IOperacion.Eliminar) {
           this.studentsService.eliminarStudent(this.id).subscribe(
             (response) => {
               console.log('Datos eliminados exitosamente', response);
@@ -188,7 +189,7 @@ export class TableComponent implements OnInit {
         }
         break;
       case 'Computadoras':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.computersService.agregarComputadora(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -201,7 +202,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.computersService.actualizarComputadora(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -214,7 +215,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           )
-        } else if (operacion === Operacion.Eliminar) {
+        } else if (operacion === IOperacion.Eliminar) {
           this.computersService.eliminarComputadora(this.id).subscribe(
 
             (response) => {
@@ -231,7 +232,7 @@ export class TableComponent implements OnInit {
         };
         break;
       case 'Programas':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.programsService.agregarProgram(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -244,7 +245,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.programsService.actualizarProgram(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -257,7 +258,7 @@ export class TableComponent implements OnInit {
               this.snackbarComponent.show();
             }
           )
-        } else if (operacion === Operacion.Eliminar) {
+        } else if (operacion === IOperacion.Eliminar) {
           this.programsService.eliminarProgram(this.id).subscribe(
             (response) => {
               console.log('Datos eliminados exitosamente:', response);
@@ -320,9 +321,9 @@ export class TableComponent implements OnInit {
     return baseConfig;
   }
 
-  openDialogTemplate1(template: TemplateRef<any>, item: any = null) {
+  openDialogTemplateDelete(template: TemplateRef<any>, item: any = null) {
     this.id = item?.id;
-    this.operacionActual = item && Operacion.Eliminar;
+    this.operacionActual = item && IOperacion.Eliminar;
 
     this.matDialogRef = this.dialogService.openDialogTemplate({
       template,
@@ -330,7 +331,7 @@ export class TableComponent implements OnInit {
     this.matDialogRef
       .afterClosed()
       .subscribe(res => {
-        this.operacionActual = Operacion.Eliminar;
+        this.operacionActual = IOperacion.Eliminar;
       })
   }
 
@@ -345,5 +346,40 @@ export class TableComponent implements OnInit {
       this.enviarDatosAlServicio(this.operacionActual, id);
       this.matDialogRef.close();
     }
+  }
+
+  aprobarSolicitud(item: any) {
+    const id = item?.id
+    const status = { status: true }
+
+    this.requestService.revisarSolicitud(id, status).subscribe(
+      (response) => {
+        console.log('Datos creados exitosamente:', response);
+        this.snackbarComponent.message = `Creación exitosa`
+        this.snackbarComponent.show();
+      },
+      (error) => {
+        console.error('Error al enviar datos:', error);
+        this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+        this.snackbarComponent.show();
+      }
+    );
+  }
+  rechazarSolicitud(item: any) {
+    const id = item?.id
+    const status = { status: false }
+
+    this.requestService.revisarSolicitud(id, status).subscribe(
+      (response) => {
+        console.log('Datos creados exitosamente:', response);
+        this.snackbarComponent.message = `Creación exitosa`
+        this.snackbarComponent.show();
+      },
+      (error) => {
+        console.error('Error al enviar datos:', error);
+        this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+        this.snackbarComponent.show();
+      }
+    );
   }
 }

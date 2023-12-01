@@ -6,3 +6,9 @@
 .demo-app {
     padding: 0px 20px;
 }
+
+.evento {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

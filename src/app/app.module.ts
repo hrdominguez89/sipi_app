@@ -25,6 +25,9 @@ import { CustomSnackbarComponent } from './components/commons/custom-snackbar/cu
 import { MatSelectModule } from '@angular/material/select';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarComponent } from './components/pages/calendar/calendar.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 
 
@@ -57,7 +60,10 @@ import { CalendarComponent } from './components/pages/calendar/calendar.componen
     MatIconModule,
     MatSnackBarModule,
     MatSelectModule,
-    FullCalendarModule
+    FullCalendarModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [
     {
