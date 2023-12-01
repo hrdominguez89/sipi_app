@@ -31,3 +31,16 @@
     padding: 0px 30px;
     min-height: 100vh;
 }
+
+.form-field {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 30%;
+}
+
+.filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

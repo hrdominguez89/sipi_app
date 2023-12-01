@@ -20,10 +20,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const token = this.userService.getToken();
 
-    // Verifica si la solicitud requiere autenticación
-    if (request.headers.get('No-Auth') === 'True') {
-      return next.handle(request);
-    }
     if (token) {
       const authRequest = request.clone({
         setHeaders: {

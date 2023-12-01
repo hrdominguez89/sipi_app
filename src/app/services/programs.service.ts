@@ -33,6 +33,6 @@ export class ProgramsService {
 
   // Eliminar una Program por ID
   eliminarProgram(programId: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${programId}`);
+    return this.http.delete<any>(`${this.apiUrl}/delete/${programId}`);
   }
 }

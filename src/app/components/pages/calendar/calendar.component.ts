@@ -1,10 +1,11 @@
-import { Component, signal, ChangeDetectorRef } from '@angular/core';
+import { Component, signal, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import esLocale from '@fullcalendar/core/locales/es';
+import { CalendarRequestsService } from '../../../services/calendar-requests.service';
 
 @Component({
   selector: 'app-calendar',
@@ -12,9 +13,9 @@ import esLocale from '@fullcalendar/core/locales/es';
   styleUrls: ['./calendar.component.css']
 })
 
-export class CalendarComponent {
-  calendarVisible = signal(true);
-  calendarOptions = signal<CalendarOptions>({
+export class CalendarComponent implements OnInit {
+
+  calendarOptions: CalendarOptions = ({
     plugins: [
       interactionPlugin,
       dayGridPlugin,
@@ -27,6 +28,7 @@ export class CalendarComponent {
       right: 'dayGridMonth,timeGridWeek'
     },
     initialView: 'dayGridMonth',
+    events: [],
     weekends: false,
     editable: true,
     selectable: true,
@@ -37,40 +39,39 @@ export class CalendarComponent {
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this)
   });
+
   currentEvents = signal<EventApi[]>([]);
 
-  constructor(private changeDetector: ChangeDetectorRef) {
+  constructor(private changeDetector: ChangeDetectorRef, private calendarRequestsService: CalendarRequestsService) {
   }
 
-  handleCalendarToggle() {
-    this.calendarVisible.update((bool) => !bool);
-  }
+  ngOnInit() {
+    this.calendarRequestsService.obtenerSolicitudesCalendario().subscribe(
+      (data: any[]) => {
+        const eventos = data.map(evento => ({
+          id: evento.id,
+          title: evento.profesor,
+          description: evento.equipos_solicitados,
+          start: evento.fecha_evento,
+          end: evento.fecha_evento,
+        }))
+        console.log(eventos)
 
-  handleWeekendsToggle() {
-    this.calendarOptions.mutate((options) => {
-      options.weekends = !options.weekends;
-    });
+        this.calendarOptions.events = eventos
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Por favor, agregue su nuevo evento');
     const calendarApi = selectInfo.view.calendar;
-
     calendarApi.unselect(); // borra evento en la fecha del calendario
 
-    if (title) {
-      calendarApi.addEvent({
-        id: '8',
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
-    }
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    console.log(clickInfo)
     if (confirm(`El evento "${clickInfo.event.title}" será borrado de forma definitiva`)) {
       clickInfo.event.remove();
     }

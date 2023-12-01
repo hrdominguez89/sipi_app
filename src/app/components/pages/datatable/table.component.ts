@@ -1,5 +1,5 @@
 // table.component.ts
-import { Component, OnInit, Input, TemplateRef, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ChangeDetectorRef, } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataSharingService } from '../../../services/data-sharing.service';
 import { DialogService } from '../../../services/dialog.service';
@@ -12,13 +12,10 @@ import { StudentsService } from '../../../services/students.service';
 import { ReactiveFormComponent } from '../../reactive-form/reactive-form.component';
 import { ViewChild } from '@angular/core';
 import { CustomSnackbarComponent } from '../../commons/custom-snackbar/custom-snackbar.component';
-import { Subject, takeUntil } from 'rxjs';
+import { IOperacion } from 'src/app/models/operacion.model';
+import { RequestsService } from 'src/app/services/requests.service';
 
-export enum Operacion {
-  Crear = 'crear',
-  Editar = 'editar',
-  Eliminar = 'eliminar',
-}
+
 
 @Component({
   selector: 'app-table',
@@ -26,14 +23,14 @@ export enum Operacion {
   styleUrls: ['./table.component.css'],
 })
 
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit {
   tableData: any[] = [];
   columnHeaders: string[] = [];
   @Input() tableName: string | null = null;
   data: any = null;
   id: number = 0;
   formConfig: any[] = [];
-  operacionActual: Operacion = Operacion.Crear;
+  operacionActual: IOperacion = IOperacion.Crear;
   operacionCapitalizada: string = '';
   selectOptions: any[] = [
     { label: 'Administrador', value: 1 },
@@ -41,8 +38,9 @@ export class TableComponent implements OnInit, OnDestroy {
     { label: 'Bedele', value: 3 },
   ]
   shouldRenderTable: boolean = true;
+  status: boolean = true;
+
   private matDialogRef!: MatDialogRef<DialogTemplateComponent>;
-  private destroy$ = new Subject<void>();
 
   @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
   @ViewChild(CustomSnackbarComponent) snackbarComponent!: CustomSnackbarComponent;
@@ -55,7 +53,8 @@ export class TableComponent implements OnInit, OnDestroy {
     private programsService: ProgramsService,
     private computersService: ComputersService,
     private studentsService: StudentsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private requestService: RequestsService
   ) { }
 
 
@@ -64,8 +63,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.tableName = this.route.snapshot.paramMap.get('tableName');
 
     // Se suscribe al servicio de comunicación para recibir actualizaciones
-    this.dataSharingService.getDataAndHeaders()
-      .pipe(takeUntil(this.destroy$))
+    this.dataSharingService?.getDataAndHeaders()
       .subscribe(data => {
         this.tableData = data.data;
         this.columnHeaders = data.headers;
@@ -80,7 +78,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.data = data;
     this.id = data?.id;
 
-    this.operacionActual = data ? Operacion.Editar : Operacion.Crear;
+    this.operacionActual = data ? IOperacion.Editar : IOperacion.Crear;
     this.operacionCapitalizada = this.operacionActual.charAt(0).toUpperCase() + this.operacionActual.slice(1);
 
     this.matDialogRef = this.dialogService.openDialogTemplate({
@@ -90,10 +88,10 @@ export class TableComponent implements OnInit, OnDestroy {
       .afterClosed()
       .subscribe(res => {
         this.reactiveFormComponent.resetForm();
-        this.operacionActual = Operacion.Crear;
+        this.operacionActual = IOperacion.Crear;
       })
 
-    if (this.operacionActual === Operacion.Editar) {
+    if (this.operacionActual === IOperacion.Editar) {
       this.reactiveFormComponent?.fillForm();
     }
   }
@@ -107,7 +105,7 @@ export class TableComponent implements OnInit, OnDestroy {
     // enviar datos al servicio según la operación y la tabla
     switch (this.tableName) {
       case 'Usuarios':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.usersService.agregarUser(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -120,7 +118,7 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.usersService.actualizarUser(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -133,10 +131,23 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           )
-        }
+        } else if (operacion === IOperacion.Eliminar) {
+          this.usersService.eliminarUser(this.id).subscribe(
+            (response) => {
+              console.log('Datos eliminados exitosamente:', response);
+              this.snackbarComponent.message = `Usuario eliminado`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
+        };
         break;
       case 'Estudiantes':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.studentsService.agregarStudent(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -149,7 +160,7 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.studentsService.actualizarStudent(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -162,10 +173,23 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           )
+        } else if (operacion === IOperacion.Eliminar) {
+          this.studentsService.eliminarStudent(this.id).subscribe(
+            (response) => {
+              console.log('Datos eliminados exitosamente', response);
+              this.snackbarComponent.message = `Estudiante eliminado`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
         }
         break;
       case 'Computadoras':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.computersService.agregarComputadora(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -178,7 +202,7 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.computersService.actualizarComputadora(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -191,10 +215,24 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           )
-        }
+        } else if (operacion === IOperacion.Eliminar) {
+          this.computersService.eliminarComputadora(this.id).subscribe(
+
+            (response) => {
+              console.log('Datos eliminados exitosamente:', response);
+              this.snackbarComponent.message = `Computadora eliminada`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
+        };
         break;
       case 'Programas':
-        if (operacion === Operacion.Crear) {
+        if (operacion === IOperacion.Crear) {
           this.programsService.agregarProgram(datos).subscribe(
             (response) => {
               console.log('Datos creados exitosamente:', response);
@@ -207,7 +245,7 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           );
-        } else if (operacion === Operacion.Editar) {
+        } else if (operacion === IOperacion.Editar) {
           this.programsService.actualizarProgram(this.id, datos).subscribe(
             (response) => {
               console.log('Datos actualizados exitosamente:', response);
@@ -220,7 +258,20 @@ export class TableComponent implements OnInit, OnDestroy {
               this.snackbarComponent.show();
             }
           )
-        }
+        } else if (operacion === IOperacion.Eliminar) {
+          this.programsService.eliminarProgram(this.id).subscribe(
+            (response) => {
+              console.log('Datos eliminados exitosamente:', response);
+              this.snackbarComponent.message = `Programa eliminado`
+              this.snackbarComponent.show();
+            },
+            (error) => {
+              console.error('Error al enviar datos:', error);
+              this.snackbarComponent.message = `Eliminación fallida ${error.error.message}`
+              this.snackbarComponent.show();
+            }
+          )
+        };
         break;
     }
   }
@@ -270,22 +321,65 @@ export class TableComponent implements OnInit, OnDestroy {
     return baseConfig;
   }
 
-  borrarItem(item: any) {
-    const idToDelete = item?.id;
+  openDialogTemplateDelete(template: TemplateRef<any>, item: any = null) {
+    this.id = item?.id;
+    this.operacionActual = item && IOperacion.Eliminar;
+
+    this.matDialogRef = this.dialogService.openDialogTemplate({
+      template,
+    })
+    this.matDialogRef
+      .afterClosed()
+      .subscribe(res => {
+        this.operacionActual = IOperacion.Eliminar;
+      })
+  }
+
+  borrarItem() {
     // Lógica para borrar el elemento
-    if (idToDelete === undefined) {
+    const id = this.id
+    if (id === undefined) {
       this.snackbarComponent.message = `No es posible continuar con la operación`
       this.snackbarComponent.show();
       return;
-    }
-    const confirmacion = window.confirm('¿Estás seguro de que deseas borrar este elemento?');
-
-    if (confirmacion) {
-      this.enviarDatosAlServicio(Operacion.Eliminar, idToDelete);
+    } else {
+      this.enviarDatosAlServicio(this.operacionActual, id);
+      this.matDialogRef.close();
     }
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
+  aprobarSolicitud(item: any) {
+    const id = item?.id
+    const status = { status: true }
+
+    this.requestService.revisarSolicitud(id, status).subscribe(
+      (response) => {
+        console.log('Datos creados exitosamente:', response);
+        this.snackbarComponent.message = `Creación exitosa`
+        this.snackbarComponent.show();
+      },
+      (error) => {
+        console.error('Error al enviar datos:', error);
+        this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+        this.snackbarComponent.show();
+      }
+    );
+  }
+  rechazarSolicitud(item: any) {
+    const id = item?.id
+    const status = { status: false }
+
+    this.requestService.revisarSolicitud(id, status).subscribe(
+      (response) => {
+        console.log('Datos creados exitosamente:', response);
+        this.snackbarComponent.message = `Creación exitosa`
+        this.snackbarComponent.show();
+      },
+      (error) => {
+        console.error('Error al enviar datos:', error);
+        this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+        this.snackbarComponent.show();
+      }
+    );
   }
 }

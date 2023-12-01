@@ -33,6 +33,7 @@ export class ComputersService {
 
   // Eliminar una computadora por ID
   eliminarComputadora(computerId: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${computerId}`);
+    console.log(computerId)
+    return this.http.delete<any>(`${this.apiUrl}/delete/${computerId}`);
   }
 }

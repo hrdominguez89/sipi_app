@@ -1,6 +1,6 @@
 <nav class="navbar" *ngIf="getIsLoggedIn()">
     <div class="navbar-brand">
-        <div class="navbar-item" *ngIf="isTableRoute() || isExcludedRoute()">
+        <div class="navbar-item" *ngIf="isTableRoute() ">
             <button mat-raised-button color="accent" (click)="volverAtras()">Volver</button>
         </div>
     </div>

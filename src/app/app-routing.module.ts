@@ -5,16 +5,18 @@ import { DashboardAdminComponent } from './components/pages/dashboard-admin/dash
 import { TableComponent } from './components/pages/datatable/table.component';
 import { DashboardProfComponent } from './components/pages/dashboard-prof/dashboard-prof.component';
 import { CalendarComponent } from './components/pages/calendar/calendar.component';
+import { AuthGuard } from './auth.guard';
+import { DefaultComponent } from './components/pages/default/default.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard-admin', component: DashboardAdminComponent },
-  { path: 'dashboard-prof', component: DashboardProfComponent },
-  { path: 'dashboard-bedel', component: DashboardProfComponent }, // modificar component
-  { path: 'dashboard-default', component: DashboardProfComponent }, // modificar component
-  { path: 'table/:tableName', component: TableComponent },
-  { path: 'calendar', component: CalendarComponent },
+  { path: 'dashboard-admin', component: DashboardAdminComponent, canActivate: [AuthGuard] },
+  { path: 'dashboard-prof', component: DashboardProfComponent, canActivate: [AuthGuard] },
+  { path: 'dashboard-bedel', component: DefaultComponent, canActivate: [AuthGuard] }, // modificar component
+  { path: 'default', component: DefaultComponent, canActivate: [AuthGuard] },
+  { path: 'table/:tableName', component: TableComponent, canActivate: [AuthGuard] },
+  { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
 
 ];
 

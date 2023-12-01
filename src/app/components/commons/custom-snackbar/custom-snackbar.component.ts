@@ -20,10 +20,11 @@ export class CustomSnackbarComponent implements OnInit {
   ngOnInit(): void { }
 
   show(): void {
-    this.snackBar.open(this.message, '', {
+    this.snackBar.open(this.message, 'success', {
       duration: 3000,
       verticalPosition: this.verticalPosition,
       horizontalPosition: this.horizontalPosition,
+      panelClass: ['green-snackbar', 'login-snackbar']
     });
   }
 }
