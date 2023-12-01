@@ -19,7 +19,7 @@ export class RequestsService {
   agregarSolicitudProfessor(request: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}`, request);
   }
-  // Agregar una nueva solicitud
+  // Revisar una solicitud
   revisarSolicitud(request_id: any, status: any): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}/review/${request_id}`, status);
   }

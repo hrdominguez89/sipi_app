@@ -11,7 +11,7 @@
                     <h2>Lista de {{ tableName }}</h2>
                 </strong>
             </div>
-            <div class="container-button" *ngIf="tableName !== 'Solicitudes'">
+            <div class="container-button" *ngIf="tableName !== 'Solicitudes' && tableName !== 'Devoluciones'">
                 <button mat-raised-button color="accent" (click)="openDialogTemplate(template)">
                     Agregar {{tableName}}
                 </button>
@@ -21,7 +21,7 @@
 
     <mat-form-field class="form-field">
         <div class="filter">
-            <mat-label>Filtro</mat-label>
+            <mat-label>Buscar</mat-label>
             <mat-icon>search</mat-icon>
         </div>
         <input matInput (input)="applyFilter($event)" />
@@ -37,8 +37,8 @@
 
         <!-- Columna de acciones -->
         <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef >Actions</th>
-            <ng-container *ngIf="tableName !== 'Solicitudes'">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <ng-container *ngIf="tableName !== 'Solicitudes' && tableName !== 'Devoluciones'">
                 <td mat-cell *matCellDef="let element">
                     <button mat-icon-button (click)="openDialogTemplate(template, element)">
                         <mat-icon>edit</mat-icon>
@@ -54,6 +54,12 @@
                         (click)="aprobarSolicitud(element)">Aprobar</button>
                     <button mat-raised-button mat-dialog-close color="warn"
                         (click)="rechazarSolicitud(element)">Rechazar</button>
+                </td>
+            </ng-container>
+            <ng-container *ngIf="tableName === 'Devoluciones'">
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button mat-dialog-close color="accent"
+                        (click)="devolverComputadora(element)">Devolver</button>
                 </td>
             </ng-container>
         </ng-container>

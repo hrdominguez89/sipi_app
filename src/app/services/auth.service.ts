@@ -51,8 +51,6 @@ export class AuthService {
             this.router.navigate(['/dashboard-admin']);
         } else if (this.hasProfessorRole(userRoleId)) {
             this.router.navigate(['/dashboard-prof']);
-        } else if (this.hasBedelRole(userRoleId)) {
-            this.router.navigate(['/dashboard-bedel']);
         } else {
             this.router.navigate(['/default']);
         }
@@ -64,9 +62,5 @@ export class AuthService {
 
     private hasProfessorRole(userRoleId: number): boolean {
         return userRoleId === 2;
-    }
-
-    private hasBedelRole(userRoleId: number): boolean {
-        return userRoleId === 3;
     }
 }

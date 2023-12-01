@@ -28,6 +28,7 @@ import { CalendarComponent } from './components/pages/calendar/calendar.componen
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { TableCalendarComponent } from './components/pages/table-calendar/table-calendar.component';
 
 
 
@@ -44,7 +45,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     DialogTemplateComponent,
     ReactiveFormComponent,
     CustomSnackbarComponent,
-    CalendarComponent
+    CalendarComponent,
+    TableCalendarComponent,
 
   ],
   imports: [

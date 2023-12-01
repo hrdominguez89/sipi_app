@@ -31,6 +31,12 @@
     border-radius: 4px;
 }
 
+.filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 th.sorting,
 td {
     text-align: center;
@@ -45,10 +51,4 @@ td {
 
 .container-table {
     min-height: 40vh;
-}
-
-.filter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }

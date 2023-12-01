@@ -1,4 +1,3 @@
-// Ejemplo para el servicio de computadoras (computadoras.service.ts)
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -7,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProgramsService {
-  private apiUrl = 'http://localhost/api/programs'; // Reemplaza esto con la URL real de tu API
+  private apiUrl = 'http://localhost/api/programs';
 
   constructor(private http: HttpClient) { }
 

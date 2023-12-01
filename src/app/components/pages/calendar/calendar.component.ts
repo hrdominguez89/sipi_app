@@ -6,6 +6,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import esLocale from '@fullcalendar/core/locales/es';
 import { CalendarRequestsService } from '../../../services/calendar-requests.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
@@ -42,7 +43,7 @@ export class CalendarComponent implements OnInit {
 
   currentEvents = signal<EventApi[]>([]);
 
-  constructor(private changeDetector: ChangeDetectorRef, private calendarRequestsService: CalendarRequestsService) {
+  constructor(private router: Router, private changeDetector: ChangeDetectorRef, private calendarRequestsService: CalendarRequestsService) {
   }
 
   ngOnInit() {
@@ -55,14 +56,13 @@ export class CalendarComponent implements OnInit {
           start: evento.fecha_evento,
           end: evento.fecha_evento,
         }))
-        console.log(eventos)
-
         this.calendarOptions.events = eventos
       },
       (error) => {
         console.error(error);
       }
     );
+
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
@@ -72,9 +72,7 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEventClick(clickInfo: EventClickArg) {
-    if (confirm(`El evento "${clickInfo.event.title}" será borrado de forma definitiva`)) {
-      clickInfo.event.remove();
-    }
+    this.router.navigate(['/calendar', clickInfo.event.id]);
   }
 
   handleEvents(events: EventApi[]) {
