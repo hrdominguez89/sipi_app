@@ -9,7 +9,7 @@ export class DataSharingService {
   // BehaviorSubjects para almacenar datos y encabezados de la tabla
   private tableDataSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
   private columnHeadersSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
-  
+
   // Clave de localStorage para persistir datos
   private readonly STORAGE_KEY = 'tableDataAndHeaders';
 
@@ -24,17 +24,18 @@ export class DataSharingService {
   }
   // Obtiene un Observable que emite tanto datos como encabezados
   getDataAndHeaders(): Observable<{ data: any[], headers: string[] }> {
-    return combineLatest([this.tableDataSubject, this.columnHeadersSubject]).pipe(
-      map(([data, headers]) => ({ data, headers }))
-    );
+    return combineLatest([this.tableDataSubject, this.columnHeadersSubject])
+      .pipe(
+        map(([data, headers]) => ({ data, headers }))
+      );
   }
   // Actualiza tanto los datos como los encabezados y los almacena en el localStorage
   updateTableDataAndHeaders(dataAndHeaders: { data: any[], headers: string[] }): void {
     this.tableDataSubject.next(dataAndHeaders.data);
     this.columnHeadersSubject.next(dataAndHeaders.headers);
 
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dataAndHeaders));
-    
+    // localStorage.setItem(this.STORAGE_KEY, JSON.stringify(dataAndHeaders));
+
   }
   // Obtiene un Observable que emite los datos de la tabla
   getTableData(): Observable<any[]> {

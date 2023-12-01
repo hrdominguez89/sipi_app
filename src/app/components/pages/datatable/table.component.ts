@@ -14,8 +14,9 @@ import { ViewChild } from '@angular/core';
 import { CustomSnackbarComponent } from '../../commons/custom-snackbar/custom-snackbar.component';
 import { IOperacion } from 'src/app/models/operacion.model';
 import { RequestsService } from 'src/app/services/requests.service';
-
-
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-table',
@@ -24,7 +25,6 @@ import { RequestsService } from 'src/app/services/requests.service';
 })
 
 export class TableComponent implements OnInit {
-  tableData: any[] = [];
   columnHeaders: string[] = [];
   @Input() tableName: string | null = null;
   data: any = null;
@@ -35,15 +35,18 @@ export class TableComponent implements OnInit {
   selectOptions: any[] = [
     { label: 'Administrador', value: 1 },
     { label: 'Profesor', value: 2 },
-    { label: 'Bedele', value: 3 },
   ]
-  shouldRenderTable: boolean = true;
   status: boolean = true;
+
+  dataSource = new MatTableDataSource<any>();
 
   private matDialogRef!: MatDialogRef<DialogTemplateComponent>;
 
   @ViewChild(ReactiveFormComponent) reactiveFormComponent!: ReactiveFormComponent;
   @ViewChild(CustomSnackbarComponent) snackbarComponent!: CustomSnackbarComponent;
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,
@@ -65,13 +68,29 @@ export class TableComponent implements OnInit {
     // Se suscribe al servicio de comunicación para recibir actualizaciones
     this.dataSharingService?.getDataAndHeaders()
       .subscribe(data => {
-        this.tableData = data.data;
+        this.dataSource.data = data.data;
         this.columnHeaders = data.headers;
       });
 
     this.formConfig = this.getFormConfig();
-    this.cdr.detectChanges();
+    // this.cdr.detectChanges();
 
+
+
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   openDialogTemplate(template: TemplateRef<any>, data: any = null) {
@@ -111,6 +130,7 @@ export class TableComponent implements OnInit {
               console.log('Datos creados exitosamente:', response);
               this.snackbarComponent.message = `Creación exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -124,6 +144,7 @@ export class TableComponent implements OnInit {
               console.log('Datos actualizados exitosamente:', response);
               this.snackbarComponent.message = `Actualización exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -137,6 +158,7 @@ export class TableComponent implements OnInit {
               console.log('Datos eliminados exitosamente:', response);
               this.snackbarComponent.message = `Usuario eliminado`
               this.snackbarComponent.show();
+              this.refreshTable();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -153,6 +175,7 @@ export class TableComponent implements OnInit {
               console.log('Datos creados exitosamente:', response);
               this.snackbarComponent.message = `Creación exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -166,6 +189,8 @@ export class TableComponent implements OnInit {
               console.log('Datos actualizados exitosamente:', response);
               this.snackbarComponent.message = `Actualización exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -179,6 +204,8 @@ export class TableComponent implements OnInit {
               console.log('Datos eliminados exitosamente', response);
               this.snackbarComponent.message = `Estudiante eliminado`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -195,6 +222,8 @@ export class TableComponent implements OnInit {
               console.log('Datos creados exitosamente:', response);
               this.snackbarComponent.message = `Creación exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -208,6 +237,8 @@ export class TableComponent implements OnInit {
               console.log('Datos actualizados exitosamente:', response);
               this.snackbarComponent.message = `Actualización exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -222,6 +253,8 @@ export class TableComponent implements OnInit {
               console.log('Datos eliminados exitosamente:', response);
               this.snackbarComponent.message = `Computadora eliminada`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -238,6 +271,8 @@ export class TableComponent implements OnInit {
               console.log('Datos creados exitosamente:', response);
               this.snackbarComponent.message = `Creación exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -251,6 +286,8 @@ export class TableComponent implements OnInit {
               console.log('Datos actualizados exitosamente:', response);
               this.snackbarComponent.message = `Actualización exitosa`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -264,6 +301,8 @@ export class TableComponent implements OnInit {
               console.log('Datos eliminados exitosamente:', response);
               this.snackbarComponent.message = `Programa eliminado`
               this.snackbarComponent.show();
+              this.refreshTable();
+
             },
             (error) => {
               console.error('Error al enviar datos:', error);
@@ -274,6 +313,51 @@ export class TableComponent implements OnInit {
         };
         break;
     }
+  }
+
+  private refreshTable() {
+
+    switch (this.tableName) {
+      case 'Usuarios':
+        return this.usersService.obtenerUsers().subscribe((dato) => {
+          this.dataSource.data = dato;
+          this.columnHeaders = Object.keys(dato[0]);
+          this.cdr.detectChanges();
+        });
+      case 'Computadoras':
+        return this.computersService.obtenerComputadoras().subscribe((dato) => {
+          this.dataSource.data = dato;
+          this.columnHeaders = Object.keys(dato[0]);
+          this.cdr.detectChanges();
+        });
+      case 'Estudiantes':
+        return this.studentsService.obtenerStudents().subscribe((dato) => {
+          this.dataSource.data = dato;
+          this.columnHeaders = Object.keys(dato[0]);
+          this.cdr.detectChanges();
+        });
+      case 'Programas':
+        return this.programsService.obtenerPrograms().subscribe((dato) => {
+          this.dataSource.data = dato;
+          this.columnHeaders = Object.keys(dato[0]);
+          this.cdr.detectChanges();
+        });
+      case 'Devoluciones':
+      // return this.programsService.obtenerPrograms().subscribe((dato) => {
+      //   this.dataSource.data = dato;
+      //   this.columnHeaders = Object.keys(dato[0]);
+      //   this.cdr.detectChanges();
+      // });
+      case 'Solicitudes':
+        return this.requestService.obtenerSolicitudes().subscribe((dato) => {
+          this.dataSource.data = dato;
+          this.columnHeaders = Object.keys(dato[0]);
+          this.cdr.detectChanges();
+        });
+      default:
+        return false
+    }
+
   }
 
   private getFormConfig(): any[] {
@@ -355,12 +439,13 @@ export class TableComponent implements OnInit {
     this.requestService.revisarSolicitud(id, status).subscribe(
       (response) => {
         console.log('Datos creados exitosamente:', response);
-        this.snackbarComponent.message = `Creación exitosa`
+        this.snackbarComponent.message = `Solicitud aprobada`
         this.snackbarComponent.show();
+        this.refreshTable();
       },
       (error) => {
         console.error('Error al enviar datos:', error);
-        this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+        this.snackbarComponent.message = `Solicitud fallida ${error.error.message}`
         this.snackbarComponent.show();
       }
     );
@@ -372,12 +457,13 @@ export class TableComponent implements OnInit {
     this.requestService.revisarSolicitud(id, status).subscribe(
       (response) => {
         console.log('Datos creados exitosamente:', response);
-        this.snackbarComponent.message = `Creación exitosa`
+        this.snackbarComponent.message = `Solicitud rechazada`
         this.snackbarComponent.show();
+        this.refreshTable()
       },
       (error) => {
         console.error('Error al enviar datos:', error);
-        this.snackbarComponent.message = `Creación Fallida ${error.error.message}`
+        this.snackbarComponent.message = `Solicitud Fallida ${error.error.message}`
         this.snackbarComponent.show();
       }
     );

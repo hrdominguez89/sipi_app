@@ -87,6 +87,11 @@ export class DashboardProfComponent implements OnInit {
         console.log('Datos creados exitosamente:', response);
         this.snackbarComponent.message = `Creación exitosa`
         this.snackbarComponent.show();
+        this.requestsService.obtenerSolicitudes().subscribe(
+          (data) => {
+            this.dataSource.data = data;
+            this.displayedColumns = data.length > 0 ? Object.keys(data[0]) : [];
+          })
       },
       (error) => {
         console.error('Error al enviar datos:', error);

@@ -2,6 +2,8 @@
 
 @include mat.core();
 
+// #73F675
+
 $my-primary: mat.define-palette(mat.$indigo-palette, 900);
 $my-accent: mat.define-palette(mat.$green-palette, A700);
 

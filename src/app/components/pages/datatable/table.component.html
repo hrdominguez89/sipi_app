@@ -19,35 +19,58 @@
         </div>
     </div>
 
-    <div class="container-table" *ngIf="shouldRenderTable">
-        <table datatable class="table" *ngIf="tableData && tableData.length > 0">
-            <ng-container>
-                <thead>
-                    <tr>
-                        <th *ngFor="let header of columnHeaders">{{ header }}</th>
-                        <th>actions</th>
-                    </tr>
-                </thead>
+    <mat-form-field class="form-field">
+        <div class="filter">
+            <mat-label>Filtro</mat-label>
+            <mat-icon>search</mat-icon>
+        </div>
+        <input matInput (input)="applyFilter($event)" />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <!-- Columnas -->
+        <ng-container *ngFor="let column of columnHeaders" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column }} </th>
+            <td mat-cell *matCellDef="let element"> {{ element[column] }} </td>
+        </ng-container>
+
+        <!-- Columna de acciones -->
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef >Actions</th>
+            <ng-container *ngIf="tableName !== 'Solicitudes'">
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button (click)="openDialogTemplate(template, element)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="openDialogTemplateDelete(template1, element)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
             </ng-container>
-            <tbody>
-                <tr *ngFor="let item of tableData">
-                    <td *ngFor="let header of columnHeaders">{{ item[header] }}</td>
-                    <td *ngIf="tableName !== 'Solicitudes'">
-                        <button mat-icon-button (click)="openDialogTemplate(template, item)">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <button mat-icon-button (click)="openDialogTemplateDelete(template1,item)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </td>
-                    <td *ngIf="tableName === 'Solicitudes'">
-                        <button mat-raised-button mat-dialog-close color="accent" (click)="aprobarSolicitud(item)">Aprobar</button>
-                        <button mat-raised-button mat-dialog-close color="warn" (click)="rechazarSolicitud(item)">Rechazar</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+            <ng-container *ngIf="tableName === 'Solicitudes'">
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button mat-dialog-close color="accent"
+                        (click)="aprobarSolicitud(element)">Aprobar</button>
+                    <button mat-raised-button mat-dialog-close color="warn"
+                        (click)="rechazarSolicitud(element)">Rechazar</button>
+                </td>
+            </ng-container>
+        </ng-container>
+
+        <!-- Fila para mostrar datos vacíos o no encontrados -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" *matCellDef="let element"> No se encontraron datos. </td>
+        </tr>
+
+        <!-- Filas de datos -->
+        <tr mat-header-row *matHeaderRowDef="columnHeaders.concat('actions')"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnHeaders.concat('actions')"></tr>
+    </table>
+
+    <!-- Controles de paginación y filtro -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+
 </div>
 <ng-template #template>
     <app-reactive-form #reactiveForm [formConfig]="formConfig" [data]="data" (save)="onSave($event)"
