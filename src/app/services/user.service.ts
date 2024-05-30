@@ -22,7 +22,7 @@ export class UserService {
     }
 
     public login(username: string, password: string) {
-        return this.httpClient.post('http://localhost/api/login', {
+        return this.httpClient.post('http://34.227.164.19/api/login', {
             username,
             password
         }).pipe(
