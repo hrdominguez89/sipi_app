@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class RequestsService {
 
-  private apiUrl = 'http://34.227.164.19/api/requests';
+  private apiUrl = 'https://34.227.164.19/api/requests';
 
   constructor(private http: HttpClient) { }
 
