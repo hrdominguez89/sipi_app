@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UsersService {
-  private apiUrl = 'http://localhost/api/users'; 
+  private apiUrl = 'http://34.227.164.19/api/users'; 
   constructor(private http: HttpClient) { }
 
   // Obtener todos los usuarios
